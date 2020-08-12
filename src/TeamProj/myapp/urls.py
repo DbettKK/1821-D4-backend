@@ -19,7 +19,7 @@ urlpatterns = [
     path('user/modify/', views.UserChkOldPwd.as_view()),
     path('file/browse/', views.BrowseFile.as_view(), name='browse_file'),
 
-    path('file/browse/get', views.GetBrowseFiles.as_view(), name='get_browse_files'),
+    path('file/browse/get/', views.GetBrowseFiles.as_view(), name='get_browse_files'),
     path('file/isdelete/', views.FileIsDelete.as_view(), name='file_is_delete'),
     path('file/realdelete/', views.FileRealDelete.as_view(), name='file_real_delete'),
 
