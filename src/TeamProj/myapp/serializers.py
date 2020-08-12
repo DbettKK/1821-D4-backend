@@ -49,6 +49,7 @@ class FileSer(serializers.ModelSerializer):
 
 class UserKeptFileSer(serializers.ModelSerializer):
     file_name = serializers.CharField(source='file.file_title')
+    person_name = serializers.CharField(source='person.username')
 
     class Meta:
         model = UserKeptFile
@@ -57,6 +58,7 @@ class UserKeptFileSer(serializers.ModelSerializer):
 
 class UserBrowseFileSer(serializers.ModelSerializer):
     file_name = serializers.CharField(source='file.file_title')
+    person_name = serializers.CharField(source='person.username')
 
     class Meta:
         model = UserBrowseFile

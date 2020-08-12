@@ -197,3 +197,21 @@ class CreateFileTeam(APIView):
             'data': FileSer(f).data
         }, status=200)
 
+
+class GetCreateFiles(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        print(token)
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        files = File.objects.filter(creator=u)
+        print(files)
+
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': FileSer(files, many=True).data
+        }, status=200)
+

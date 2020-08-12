@@ -68,19 +68,12 @@ class EmailRecord(models.Model):
 # 标题、内容、文档基础信息、创建时间、修改时间、权限、作者信息(和user一对多)、评论(和user多对多)、分享连接(可通过id)
 class File(models.Model):
     """文档类"""
-    permissions = (
-        (1, '可查看'), (2, '可评论'), (3, '可修改'), (4, '可分享')
-    )
-    team_permissions = (
-        (1, '成员可查看'), (2, '成员可评论'), (3, '成员可修改'), (4, '成员可分享')
-    )
     types = (('team', '团队文档'), ('private', '私人文档'))
     # file_name = models.CharField(max_length=64, verbose_name='文档名')
     file_title = models.CharField(max_length=64, verbose_name='文档标题', default='无标题')
     file_content = models.CharField(max_length=128, verbose_name='文档内容', null=True)
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='文档创建时间')
     last_modified = models.DateTimeField(auto_now=True, verbose_name='文档最后一次修改时间')
-
     is_delete = models.BooleanField(default=False, verbose_name='是否在回收站')
     modified_times = models.IntegerField(default=0, verbose_name='修改次数', null=True)
     modified_user = models.ManyToManyField(
@@ -91,8 +84,23 @@ class File(models.Model):
         related_name='modified_name'
     )
     type = models.CharField(max_length=32, choices=types, verbose_name='文档类型')
-    permission = models.IntegerField(choices=permissions, verbose_name='总权限')
-    team_permission = models.IntegerField(choices=team_permissions, verbose_name='团队内部权限', null=True)
+
+    dif_privilege = models.ManyToManyField(
+        'User',
+        through='PrivilegePri',
+        related_name='file_privilege_pri',
+        through_fields=('file', 'person'),
+        verbose_name='权限',
+    )
+
+    dif_team_privilege = models.ManyToManyField(
+        'User',
+        through='PrivilegeTeam',
+        related_name='file_privilege_team',
+        through_fields=('file', 'member'),
+        verbose_name='团队权限',
+    )
+
     creator = models.ForeignKey(
         'User',
         on_delete=models.CASCADE,
@@ -161,14 +169,9 @@ class Team(models.Model):
 
 
 class TeamMember(models.Model):
-    permissions = (
-        (1, '可查看'), (2, '可评论'), (3, '可修改'), (4, '可分享'), (5, 'all')
-    )
-
     team = models.ForeignKey('Team', on_delete=models.CASCADE, verbose_name='所属团队')
     member = models.ForeignKey('User', on_delete=models.CASCADE, verbose_name='团队成员')
     join_time = models.DateTimeField(auto_now_add=True, verbose_name='加入时间')
-    permission = models.IntegerField(choices=permissions, verbose_name='成员权限', default=5)
 
     class Meta:
         ordering = ['-join_time']
@@ -212,3 +215,31 @@ class Modify(models.Model):
 
     def __str__(self):
         return self.person.username + '修改' + self.file.file_title
+
+
+class PrivilegePri(models.Model):
+    permissions = (
+        (1, '只能查看'), (2, '可评论和查看'), (3, '可编辑、评论和查看'), (4, '所有权限包括分享')
+    )
+
+    file = models.ForeignKey('File', on_delete=models.CASCADE, verbose_name='文档')
+    person = models.ForeignKey('User', on_delete=models.CASCADE, verbose_name='用户')
+    permission = models.IntegerField(choices=permissions, verbose_name='权限')
+    modified_time = models.DateTimeField(auto_now=True, verbose_name='权限修改时间')
+
+    def __str__(self):
+        return self.person.username + '对' + self.file.file_title + '的权限'
+
+
+class PrivilegeTeam(models.Model):
+    team_permissions = (
+        (1, '只能查看'), (2, '可评论和查看'), (3, '可编辑、评论和查看'), (4, '所有权限包括分享')
+    )
+
+    file = models.ForeignKey('File', on_delete=models.CASCADE, verbose_name='文档')
+    member = models.ForeignKey('User', on_delete=models.CASCADE, verbose_name='成员')
+    team_permission = models.IntegerField(choices=team_permissions, verbose_name='团队权限')
+    modified_time = models.DateTimeField(auto_now=True, verbose_name='权限修改时间')
+
+    def __str__(self):
+        return self.member.username + '对' + self.file.file_title + '的权限'

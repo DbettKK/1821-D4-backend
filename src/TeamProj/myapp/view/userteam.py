@@ -86,4 +86,28 @@ class ExitTeam(APIView):
         }, status=200)
 
 
+class ShareTeam(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        team_id = request.GET.get('team_id')
+        if team_id is None:
+            return Response({
+                'info': '参数不完整',
+                'code': 400,
+            }, status=400)
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        t = Team.objects.get(pk=team_id)
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': {
+                'url': 'http://175.24.121.113:8000/myapp/team/join/' + team_id
+            }
+        }, status=200)
+
+
+
 

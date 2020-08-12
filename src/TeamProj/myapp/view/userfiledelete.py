@@ -1,6 +1,7 @@
 from rest_framework.views import APIView, Response
 from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team
 from myapp.views import chk_token
+from myapp.serializers import FileSer
 
 
 def chk_file_id(file_id):
@@ -12,6 +13,7 @@ def chk_file_id(file_id):
             'code': 403,
         }, status=403)
     return f
+
 
 
 class FileIsDelete(APIView):
