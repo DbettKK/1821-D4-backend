@@ -17,19 +17,23 @@ urlpatterns = [
     # 需要token的api   最好前面跟个子目录
     path('user/info/', views.UserInfo.as_view(), name='userinfo'),
     path('user/modify/', views.UserChkOldPwd.as_view()),
-    path('user/browse/', views.BrowseFile.as_view(), name='browse_file'),
+    path('file/browse/', views.BrowseFile.as_view(), name='browse_file'),
 
+    path('file/browse/get', views.GetBrowseFiles.as_view(), name='get_browse_files'),
     path('file/isdelete/', views.FileIsDelete.as_view(), name='file_is_delete'),
     path('file/realdelete/', views.FileRealDelete.as_view(), name='file_real_delete'),
 
     path('file/create/pri/', views.CreateFilePri.as_view(), name='create_pri_file'),
     path('file/create/team/', views.CreateFileTeam.as_view(), name='create_team_file'),
+    path('file/create/all/get/', views.GetCreateFiles.as_view(), name='get_create_file_all'),
     path('file/favorite/', views.Favorites.as_view(), name='favorite'),
     path('file/cancelfavor/', views.CancelFavorite.as_view(), name='cancel_favorite'),
+    path('file/favorite/get/', views.GetFavorites.as_view(), name='get_favorites'),
 
     path('team/create/', views.CreateTeam.as_view(), name='create_team'),
     path('team/join/<int:team_id>', views.JoinTeam.as_view(), name='join_team'),
     path('team/exit/', views.ExitTeam.as_view(), name='exit_team'),
+    path('team/share/', views.ShareTeam.as_view(), name='share_team'),
 
     path('file/comment/', views.CommentFile.as_view(), name='comment'),
 ]

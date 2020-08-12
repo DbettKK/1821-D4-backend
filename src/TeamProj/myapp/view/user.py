@@ -112,12 +112,18 @@ class GetBackPassword(APIView):
         current_time = datetime.datetime.now()
         if EmailRecord.objects.filter(email=email, code=code, exprie_time__gte=current_time, send_choice='findpassword'):
             user = User.objects.filter(username=username)
-            user.password = make_password(pwd_new)
-            user.save()
+            if user:
+                user = user.get()
+                user.password = make_password(pwd_new)
+                user.save()
+                return Response({
+                    'info': '修改成功',
+                    'code': 200
+                }, status=200)
             return Response({
-                'info': '找回成功',
-                'code': 200
-            }, status=200)
+                'info': '用户不存在',
+                'code': 403
+            }, status=403)
         else:
             return Response({
                 'info': '验证码错误',

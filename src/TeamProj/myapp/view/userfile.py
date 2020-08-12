@@ -1,8 +1,9 @@
+from django.utils import timezone
 import json
 from rest_framework.views import APIView, Response
 from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team
 from myapp.views import chk_token
-from myapp.serializers import FileSer, UserKeptFileSer
+from myapp.serializers import FileSer, UserKeptFileSer, UserBrowseFileSer
 
 
 def chk_file_id(file_id):
@@ -31,13 +32,32 @@ class BrowseFile(APIView):
         if isinstance(f, Response):
             return f
 
-        UserBrowseFile.objects.update_or_create(person=u, file=f)
-        ubf = UserBrowseFile.objects.filter(person=u, file=f).values()
-        print(ubf)
+        ubf = UserBrowseFile.objects.update_or_create(person=u, file=f)[0]
+
         return Response({
             'info': 'success',
             'code': 200,
-            'data': ubf
+            'data': UserBrowseFileSer(ubf).data
+        }, status=200)
+
+
+class GetBrowseFiles(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        print(token)
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        now = timezone.now() + timezone.timedelta(days=-10)
+        print(now)
+        files = UserBrowseFile.objects.filter(person=u, last_modified__gte=now)
+        print(files)
+
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': UserBrowseFileSer(files, many=True).data
         }, status=200)
 
 
@@ -104,6 +124,24 @@ class CancelFavorite(APIView):
         }, status=403)
 
 
+class GetFavorites(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        print(token)
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        files = UserKeptFile.objects.filter(person=u)
+        print(files)
+
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': UserKeptFileSer(files, many=True).data
+        }, status=200)
+
+
 class CreateFilePri(APIView):
     def get(self, request):
         token = request.META.get('HTTP_TOKEN')
@@ -157,5 +195,23 @@ class CreateFileTeam(APIView):
             'info': 'success',
             'code': 200,
             'data': FileSer(f).data
+        }, status=200)
+
+
+class GetCreateFiles(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        print(token)
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        files = File.objects.filter(creator=u)
+        print(files)
+
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': FileSer(files, many=True).data
         }, status=200)
 

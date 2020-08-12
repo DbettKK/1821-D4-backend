@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Comment, File, UserKeptFile, TeamMember, Team
+from .models import User, Comment, File, UserKeptFile, TeamMember, Team, UserBrowseFile
 
 
 # class CreateUserSer(serializers.ModelSerializer):
@@ -48,8 +48,20 @@ class FileSer(serializers.ModelSerializer):
 
 
 class UserKeptFileSer(serializers.ModelSerializer):
+    file_name = serializers.CharField(source='file.file_title')
+    person_name = serializers.CharField(source='person.username')
+
     class Meta:
         model = UserKeptFile
+        fields = '__all__'
+
+
+class UserBrowseFileSer(serializers.ModelSerializer):
+    file_name = serializers.CharField(source='file.file_title')
+    person_name = serializers.CharField(source='person.username')
+
+    class Meta:
+        model = UserBrowseFile
         fields = '__all__'
 
 

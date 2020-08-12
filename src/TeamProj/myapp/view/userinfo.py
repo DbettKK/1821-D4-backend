@@ -59,11 +59,6 @@ class UserInfo(APIView):
                 'code': 400
             }, status=400)
         u = User.objects.get(pk=user_id)
-        if u.check_pwd(pwd):
-            return Response({
-                'info': '新密码不能与旧密码一样',
-                'code': 403
-            }, status=403)
         u.password = make_password(pwd)
         u.email = email
         u.phone_num = phone_num
