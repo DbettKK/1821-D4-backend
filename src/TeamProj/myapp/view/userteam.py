@@ -1,4 +1,5 @@
 from rest_framework.views import APIView, Response
+from django.db.models import Q
 from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, TeamMember
 from myapp.views import chk_token
 from myapp.serializers import TeamMemberSer, TeamSer
@@ -116,7 +117,7 @@ class GetAllTeams(APIView):
         if isinstance(user_id, Response):
             return user_id
         u = User.objects.get(pk=user_id)
-        teams = Team.objects.filter(creator=u)
+        teams = Team.objects.filter(Q(creator=u)|Q(members__pk=user_id)).order_by('id')
         return Response({
             'info': 'success',
             'code': 200,

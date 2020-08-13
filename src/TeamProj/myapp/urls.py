@@ -35,7 +35,7 @@ urlpatterns = [
     path('team/join/<int:team_id>', views.JoinTeam.as_view(), name='join_team'),
     path('team/exit/', views.ExitTeam.as_view(), name='exit_team'),
     path('team/share/', views.ShareTeam.as_view(), name='share_team'),
-    path('team/create/get/', views.GetAllTeams.as_view(), name='get_create_team'),
+    path('team/all/get/', views.GetAllTeams.as_view(), name='get_create_team'),
 
     path('file/comment/', views.CommentFile.as_view(), name='comment'),
 ]
