@@ -71,6 +71,7 @@ from .view.userfile import BrowseFile, Favorites, CancelFavorite, \
 from .view.userteam import CreateTeam, JoinTeam, ExitTeam, ShareTeam, GetAllTeams
 from .view.comment import CommentFile
 from .view.userfiledelete import FileIsDelete, FileRealDelete, GetTrashFiles
+from .view.fileprivilege import SetPriviFile
 
 
 

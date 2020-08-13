@@ -37,5 +37,7 @@ urlpatterns = [
     path('team/share/', views.ShareTeam.as_view(), name='share_team'),
     path('team/all/get/', views.GetAllTeams.as_view(), name='get_create_team'),
 
+    path('file/privi/pri/',views.SetPriviFile.as_view(), name='set_privi_pri'),
+
     path('file/comment/', views.CommentFile.as_view(), name='comment'),
 ]

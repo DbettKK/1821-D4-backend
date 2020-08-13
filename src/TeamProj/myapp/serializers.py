@@ -51,6 +51,7 @@ class UserKeptFileSer(serializers.ModelSerializer):
     file_name = serializers.CharField(source='file.file_title')
     file_creator_name = serializers.CharField(source='file.creator.username')
     person_name = serializers.CharField(source='person.username')
+    file_isdelete = serializers.CharField(source='file.is_delete')
 
     class Meta:
         model = UserKeptFile
@@ -61,6 +62,7 @@ class UserBrowseFileSer(serializers.ModelSerializer):
     file_name = serializers.CharField(source='file.file_title')
     file_creator_name = serializers.CharField(source='file.creator.username')
     person_name = serializers.CharField(source='person.username')
+    file_isdelete = serializers.CharField(source='file.is_delete')
 
     class Meta:
         model = UserBrowseFile
