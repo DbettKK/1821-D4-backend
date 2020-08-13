@@ -72,6 +72,8 @@ from .view.userteam import CreateTeam, JoinTeam, ExitTeam, ShareTeam, GetAllTeam
 from .view.comment import CommentFile
 from .view.userfiledelete import FileIsDelete, FileRealDelete, GetTrashFiles
 from .view.fileprivilege import SetPriviFile
+from .view.pic import getPic
+
 
 
 

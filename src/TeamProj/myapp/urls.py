@@ -40,4 +40,6 @@ urlpatterns = [
     path('file/privi/pri/',views.SetPriviFile.as_view(), name='set_privi_pri'),
 
     path('file/comment/', views.CommentFile.as_view(), name='comment'),
+
+    path('picSave/', views.getPic.as_view(), name='picSave'),
 ]
