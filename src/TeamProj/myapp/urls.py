@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 app_name = 'myapp'
@@ -17,6 +17,7 @@ urlpatterns = [
     # 需要token的api   最好前面跟个子目录
     path('user/info/', views.UserInfo.as_view(), name='userinfo'),
     path('user/modify/', views.UserChkOldPwd.as_view()),
+    path('user/writeoff/', views.WriteOff.as_view(), name='write_off'),
     path('file/browse/', views.BrowseFile.as_view(), name='browse_file'),
 
     path('file/browse/get/', views.GetBrowseFiles.as_view(), name='get_browse_files'),
@@ -26,21 +27,23 @@ urlpatterns = [
 
     path('file/create/pri/', views.CreateFilePri.as_view(), name='create_pri_file'),
     path('file/create/team/', views.CreateFileTeam.as_view(), name='create_team_file'),
+    path('file/team/get/', views.GetTeamFile.as_view(), name='get_team_file'),
     path('file/create/all/get/', views.GetCreateFiles.as_view(), name='get_create_file_all'),
+    path('file/get/', views.GetFile.as_view(), name='get_file'),
     path('file/favorite/', views.Favorites.as_view(), name='favorite'),
     path('file/cancelfavor/', views.CancelFavorite.as_view(), name='cancel_favorite'),
     path('file/favorite/get/', views.GetFavorites.as_view(), name='get_favorites'),
 
     path('team/create/', views.CreateTeam.as_view(), name='create_team'),
-    path('team/join/<int:team_id>', views.JoinTeam.as_view(), name='join_team'),
+    path('team/join/<int:team_id>/', views.JoinTeam.as_view(), name='join_team'),
     path('team/exit/', views.ExitTeam.as_view(), name='exit_team'),
     path('team/share/', views.ShareTeam.as_view(), name='share_team'),
     path('team/all/get/', views.GetAllTeams.as_view(), name='get_create_team'),
 
     path('file/privi/pri/',views.SetPriviFile.as_view(), name='set_privi_pri'),
-
+    path('file/rename/',views.RenameFile.as_view(), name='set_privi_pri'),
     path('file/comment/', views.CommentFile.as_view(), name='comment'),
-
     path('picSave/', views.getPic.as_view(), name='picSave'),
     path('mdSave/', views.FileSave.as_view(), name='mdSave'),
+
 ]

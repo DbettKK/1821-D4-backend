@@ -27,4 +27,8 @@ class getPic(APIView):
         return Response({
                 'info': '上传成功',
                 'code': 200,
+                'data': {
+                    'url': 'http://175.24.121.113:8000/media/2.jpg',
+                    'data': 'nihaonihaoniaho'
+                }
             }, status=200)    

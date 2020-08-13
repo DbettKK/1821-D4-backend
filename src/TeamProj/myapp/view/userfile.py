@@ -153,7 +153,6 @@ class CreateFilePri(APIView):
         f = File.objects.create(
             file_content='',
             type='private',
-            permission='5',
             creator=u
         )
 
@@ -215,6 +214,72 @@ class GetCreateFiles(APIView):
             'data': FileSer(files, many=True).data
         }, status=200)
 
+
+class RenameFile(APIView):
+    def post(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        file_id = request.POST.get('file_id')
+        name = request.POST.get('file_name')
+        print(name)
+        print(file_id)
+        if not all([name, file_id]):
+            return Response({
+                'info': '参数不完整',
+                'code': 400
+            }, status=400)
+        print(token)
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        f = chk_file_id(file_id)
+        if isinstance(f, Response):
+            return f
+        f.file_title = name
+        f.save()
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': FileSer(f).data
+        }, status=200)
+
+
+class GetFile(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        file_id = request.GET.get('file_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        f = chk_file_id(file_id)
+        if isinstance(f, Response):
+            return f
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': FileSer(f).data
+        }, status=200)
+
+
+class EditFile(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        file_id = request.GET.get('file_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        f = chk_file_id(file_id)
+        if isinstance(f, Response):
+            return f
+        f.modified_times += 1
+        f.save()
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': FileSer(f).data
+        }, status=200)
 
 
 

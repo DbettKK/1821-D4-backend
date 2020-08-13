@@ -2,7 +2,7 @@ from rest_framework.views import APIView, Response
 from django.db.models import Q
 from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, TeamMember
 from myapp.views import chk_token
-from myapp.serializers import TeamMemberSer, TeamSer
+from myapp.serializers import TeamMemberSer, TeamSer, FileSer
 
 
 class CreateTeam(APIView):
@@ -122,6 +122,23 @@ class GetAllTeams(APIView):
             'info': 'success',
             'code': 200,
             'data': TeamSer(teams, many=True).data
+        }, status=200)
+
+
+class GetTeamFile(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        team_id = request.GET.get('team_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        t = Team.objects.get(pk=team_id)
+        tfiles = File.objects.filter(team_belong=t)
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': FileSer(tfiles, many=True).data
         }, status=200)
 
 

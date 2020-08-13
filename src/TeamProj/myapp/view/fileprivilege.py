@@ -10,7 +10,11 @@ class SetPriviFile(APIView):
         token = request.META.get('HTTP_TOKEN')
         file_id = request.POST.get('file_id')
         privilege = request.POST.get('privilege')
-        # 判断是否是私人文档
+        if not all([privilege, file_id]):
+            return Response({
+                'info': '参数不完整',
+                'code': 400
+            }, status=400)
         pri = int(privilege)
         if pri < 1 or pri > 4:
             return Response({
@@ -24,6 +28,11 @@ class SetPriviFile(APIView):
         f = chk_file_id(file_id)
         if isinstance(f, Response):
             return f
+        if f.type != 'private':
+            return Response({
+                'info': '文档类型有误',
+                'code': 403
+            }, status=403)
         f.permission = pri
         f.save()
         return Response({
@@ -31,6 +40,50 @@ class SetPriviFile(APIView):
             'code': 200,
             'data': FileSer(f).data
         }, status=200)
+
+
+class SetPriviFileTeam(APIView):
+    def post(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        file_id = request.POST.get('file_id')
+        team_id = request.POST.get('team_id')
+        privilege = request.POST.get('privilege')
+        pri = int(privilege)
+        if not all([team_id, privilege, file_id]):
+            return Response({
+                'info': '参数不完整',
+                'code': 400
+            }, status=400)
+        if pri < 1 or pri > 4:
+            return Response({
+                'info': '权限有误',
+                'code': 403
+            }, status=403)
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        f = chk_file_id(file_id)
+        if isinstance(f, Response):
+            return f
+        if f.type != 'team':
+            return Response({
+                'info': '文档类型有误',
+                'code': 403
+            }, status=403)
+        t = Team.objects.filter(pk=team_id)
+        if t:
+            f.team_permission = pri
+            f.save()
+            return Response({
+                'info': 'success',
+                'code': 200,
+                'data': FileSer(f).data
+            }, status=200)
+        return Response({
+            'info': '不存在该团队',
+            'code': 403
+        }, status=403)
+
 
 
 
