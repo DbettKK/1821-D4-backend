@@ -73,6 +73,7 @@ from .view.comment import CommentFile
 from .view.userfiledelete import FileIsDelete, FileRealDelete, GetTrashFiles
 from .view.fileprivilege import SetPriviFile
 from .view.pic import getPic
+from .view.fileSave import FileSave
 
 
 

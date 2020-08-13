@@ -42,4 +42,5 @@ urlpatterns = [
     path('file/comment/', views.CommentFile.as_view(), name='comment'),
 
     path('picSave/', views.getPic.as_view(), name='picSave'),
+    path('mdSave/', views.FileSave.as_view(), name='mdSave'),
 ]
