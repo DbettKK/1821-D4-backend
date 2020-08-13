@@ -23,9 +23,11 @@ class getPic(APIView):
         for chunk in myFile.chunks():      # 分块写入文件  
             destination.write(chunk)  
         destination.close()
+        '''
         old_dir=os.path.join(settings.MEDIA_ROOT, myFile.name)
         new_dir=os.path.join(settings.MEDIA_ROOT, myFile.name + str(count).zfill(4)+ os.path.splitext(myFile)[1])
         os.rename(old_dir,new_dir)
+        '''
         return Response({
                 'info': '上传成功',
                 'code': 200,
