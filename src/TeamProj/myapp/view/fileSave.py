@@ -18,6 +18,7 @@ def chk_file_id(file_id):
         }, status=403)
     return f
 
+
 class FileSave(APIView):
     """保存上传过来的md形式文档"""
     authentication_classes = []
@@ -42,13 +43,11 @@ class FileSave(APIView):
         f = chk_file_id(file_id)
         if isinstance(f, Response):
             return f
-        f.content=content
-        f.title=title
+        f.file_content = content
+        f.file_title = title
         f.save()
         return Response({
             'info': 'success',
             'code': 200,
             'data': FileSer(f).data
         }, status=200)
-
-        

@@ -42,6 +42,7 @@ class CommentSer(serializers.ModelSerializer):
 
 
 class FileSer(serializers.ModelSerializer):
+    creator_name = serializers.CharField(source='creator.username')
     class Meta:
         model = File
         fields = '__all__'

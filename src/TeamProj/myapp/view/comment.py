@@ -3,6 +3,8 @@ from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, Comment
 from myapp.serializers import CommentSer
 from myapp.views import chk_token
 from .userfile import chk_file_id
+from django.conf import settings
+import os
 
 
 class CommentFile(APIView):
@@ -29,4 +31,27 @@ class CommentFile(APIView):
             'code': 200,
             'data': CommentSer(c).data
         }, status=200)
+
+
+# class GetImg(APIView):
+#     def post(self, request):
+#         token = request.META.get('HTTP_TOKEN')
+#         img = request.FILES.get('img')
+#         user_id = chk_token(token)
+#         print(img)
+#         if isinstance(user_id, Response):
+#             return user_id
+#         u = User.objects.get(pk=user_id)
+#         ext = os.path.splitext(img.name)[1]
+#         img_name = '%s/%s' % (settings.MEDIA_ROOT, img.name)
+#         picname = img_name.split(".")[0] + "." + ext
+#         print(ext)
+#         print(img_name)
+#         print(picname)
+#         with open(picname, 'wb') as pic:
+#             for c in img.chunks():
+#                 pic.write(c)
+#         print("picture OK", picname)
+#         post_pic = str(picname.split("/")[1])
+
 

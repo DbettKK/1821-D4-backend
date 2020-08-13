@@ -77,7 +77,7 @@ class File(models.Model):
     types = (('team', '团队文档'), ('private', '私人文档'))
     # file_name = models.CharField(max_length=64, verbose_name='文档名')
     file_title = models.CharField(max_length=64, verbose_name='文档标题', default='无标题')
-    file_content = models.CharField(max_length=128, verbose_name='文档内容', null=True)
+    file_content = models.TextField(verbose_name='文档内容', null=True)
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='文档创建时间')
     last_modified = models.DateTimeField(auto_now=True, verbose_name='文档最后一次修改时间')
     is_delete = models.BooleanField(default=False, verbose_name='是否在回收站')

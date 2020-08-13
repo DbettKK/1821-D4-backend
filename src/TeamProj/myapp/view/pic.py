@@ -29,4 +29,4 @@ class getPic(APIView):
         return Response({
                 'info': '上传成功',
                 'code': 200,
-            }, status=200)
+            }, status=200)    

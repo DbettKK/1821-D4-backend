@@ -2,7 +2,7 @@ from django.contrib.auth.hashers import make_password
 
 from myapp.models import User, UserToken, EmailRecord
 from myapp.serializers import UserInfoSer
-from myapp.views import md5, random_str
+from myapp.views import md5, random_str, chk_token
 from rest_framework.views import APIView, Response
 from django.conf import settings
 from django.core.mail import send_mail
@@ -207,3 +207,20 @@ class TestEmail(APIView):
                 'code': 400,
                 'emailed': False
             })
+
+
+class WriteOff(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        res = UserInfoSer(u).data
+        u.delete()
+        # u.save()
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': res
+        }, status=200)
