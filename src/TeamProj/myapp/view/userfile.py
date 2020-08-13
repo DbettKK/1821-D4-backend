@@ -206,7 +206,7 @@ class GetCreateFiles(APIView):
         if isinstance(user_id, Response):
             return user_id
         u = User.objects.get(pk=user_id)
-        files = File.objects.filter(creator=u)
+        files = File.objects.filter(creator=u, is_delete=False)
         print(files)
 
         return Response({
@@ -214,4 +214,7 @@ class GetCreateFiles(APIView):
             'code': 200,
             'data': FileSer(files, many=True).data
         }, status=200)
+
+
+
 

@@ -109,5 +109,20 @@ class ShareTeam(APIView):
         }, status=200)
 
 
+class GetAllTeams(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        teams = Team.objects.filter(creator=u)
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': TeamSer(teams, many=True).data
+        }, status=200)
+
+
 
 

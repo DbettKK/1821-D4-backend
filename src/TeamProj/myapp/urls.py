@@ -22,6 +22,7 @@ urlpatterns = [
     path('file/browse/get/', views.GetBrowseFiles.as_view(), name='get_browse_files'),
     path('file/isdelete/', views.FileIsDelete.as_view(), name='file_is_delete'),
     path('file/realdelete/', views.FileRealDelete.as_view(), name='file_real_delete'),
+    path('file/delete/get/', views.GetTrashFiles.as_view(), name='get_delete_file'),
 
     path('file/create/pri/', views.CreateFilePri.as_view(), name='create_pri_file'),
     path('file/create/team/', views.CreateFileTeam.as_view(), name='create_team_file'),
@@ -34,6 +35,7 @@ urlpatterns = [
     path('team/join/<int:team_id>', views.JoinTeam.as_view(), name='join_team'),
     path('team/exit/', views.ExitTeam.as_view(), name='exit_team'),
     path('team/share/', views.ShareTeam.as_view(), name='share_team'),
+    path('team/create/get/', views.GetAllTeams.as_view(), name='get_create_team'),
 
     path('file/comment/', views.CommentFile.as_view(), name='comment'),
 ]
