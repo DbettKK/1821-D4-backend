@@ -1,22 +1,8 @@
-from django.contrib.auth.hashers import make_password
-
-from myapp.models import User, UserToken, EmailRecord,File
+from myapp.models import Modify, File, User
 from myapp.serializers import FileSer
-from myapp.views import md5, random_str,chk_token
+from myapp.views import chk_token
+from .userfile import chk_file_id
 from rest_framework.views import APIView, Response
-from django.conf import settings
-from django.core.mail import send_mail
-import datetime
-
-def chk_file_id(file_id):
-    try:
-        f = File.objects.get(pk=file_id)
-    except:
-        return Response({
-            'info': '文件不存在',
-            'code': 403,
-        }, status=403)
-    return f
 
 
 class FileSave(APIView):
@@ -39,12 +25,15 @@ class FileSave(APIView):
         user_id = chk_token(token)
         if isinstance(user_id, Response):
             return user_id
-
+        u = User.objects.get(pk=user_id)
         f = chk_file_id(file_id)
         if isinstance(f, Response):
             return f
         f.file_content = content
         f.file_title = title
+        f.is_edit_now = False
+        f.modified_times += 1
+        Modify.objects.create(person=u, file=f)
         f.save()
         return Response({
             'info': 'success',

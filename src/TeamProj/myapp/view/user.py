@@ -64,13 +64,13 @@ class UserRegister(APIView):
                 'code': 400,
                 'registered': False,
             }, status=400)
-        if User.objects.get(email=email):
+        if User.objects.filter(email=email):
             return Response({
                 'info': 'emailExist',
                 'code': 403,
                 'registered': False,
             }, status=403)
-        if User.objects.get(username=username):
+        if User.objects.filter(username=username):
             return Response({
                 'info': 'usernameExist',
                 'code': 403,
@@ -87,8 +87,8 @@ class UserRegister(APIView):
             )
             token = md5(username)
             user = User.objects.get(username=username)
-            UserToken.objects.create(user=user,token=token)
-            res = {'info': 'success','token': token, 'registered': True, 'code': 200, 'data': UserInfoSer(u).data}
+            UserToken.objects.create(user=user, token=token)
+            res = {'info': 'success', 'token': token, 'registered': True, 'code': 200, 'data': UserInfoSer(u).data}
             return Response(res)
         else:
             return Response({
@@ -220,7 +220,7 @@ class WriteOff(APIView):
             return user_id
         u = User.objects.get(pk=user_id)
         res = UserInfoSer(u).data
-        u.delete()
+        User.objects.filter(pk=user_id).delete()
         # u.save()
         return Response({
             'info': 'success',

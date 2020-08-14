@@ -67,14 +67,16 @@ class Index(generics.ListAPIView):
 from .view.user import UserRegister, UserLogin, GetBackPassword, TestEmail, TestEmail2, random_str, WriteOff
 from .view.userinfo import UserChkOldPwd, UserInfo
 from .view.userfile import BrowseFile, Favorites, CancelFavorite, \
-    CreateFilePri, CreateFileTeam, GetBrowseFiles, GetFavorites, GetCreateFiles, GetFile, RenameFile, DelBrowseFile
+    CreateFilePri, CreateFileTeam, GetBrowseFiles, GetFavorites, GetCreateFiles, GetFile, \
+    RenameFile, DelBrowseFile
 
 from .view.userteam import CreateTeam, JoinTeam, ExitTeam, ShareTeam, GetAllTeams, GetTeamFile
-from .view.comment import CommentFile
+from .view.comment import CommentFile, GetComments
 from .view.userfiledelete import FileIsDelete, FileRealDelete, GetTrashFiles, RemoveAll
-from .view.fileprivilege import SetPriviFile
+from .view.fileprivilege import SetPriviFile, ChangePrivi, JudgePriviPri, JudgePriviTeam
 from .view.pic import getPic
 from .view.fileSave import FileSave
+from .view.fileedit import EditFile
 
 
 

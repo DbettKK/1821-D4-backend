@@ -35,5 +35,5 @@ class getPic(APIView):
         return Response({
                 'info': '上传成功',
                 'code': 200,
-                'url': time_now+myFile.name
+                'url': time_now + myFile.name
             }, status=200)    

@@ -82,6 +82,8 @@ class File(models.Model):
     last_modified = models.DateTimeField(auto_now=True, verbose_name='文档最后一次修改时间')
     is_delete = models.BooleanField(default=False, verbose_name='是否在回收站')
     delete_time = models.DateTimeField(null=True, verbose_name='删除时间')
+    is_edit_now = models.BooleanField(default=False, verbose_name='是否正在被编辑')
+
     modified_times = models.IntegerField(default=0, verbose_name='修改次数', null=True)
     modified_user = models.ManyToManyField(
         'User',
@@ -238,3 +240,18 @@ class Modify(models.Model):
 #
 #     def __str__(self):
 #         return self.member.username + '对' + self.file.file_title + '的权限'
+
+
+class Message(models.Model):
+    msg_types = (
+        ('favor', '收藏'), ('comment', '评论'), ('team', '团队')
+    )
+
+    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='my_msg', verbose_name='用户')
+    msg_type = models.CharField(max_length=32, choices=msg_types, verbose_name='消息类型')
+    msg_title = models.CharField(max_length=128, verbose_name='消息头')
+    msg_content = models.TextField(verbose_name='消息内容')
+    msg_from = models.CharField(max_length=128, null=True, verbose_name='消息来源')
+    msg_time = models.DateTimeField(auto_now_add=True, verbose_name='消息时间')
+    msg_is_read = models.BooleanField(default=False, verbose_name='消息是否已读')
+

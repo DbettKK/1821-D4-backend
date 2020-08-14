@@ -268,32 +268,6 @@ class GetFile(APIView):
         }, status=200)
 
 
-class EditFile(APIView):
-    def get(self, request):
-        token = request.META.get('HTTP_TOKEN')
-        file_id = request.GET.get('file_id')
-        user_id = chk_token(token)
-        if isinstance(user_id, Response):
-            return user_id
-        u = User.objects.get(pk=user_id)
-        f = chk_file_id(file_id)
-        if isinstance(f, Response):
-            return f
-        ukf = UserKeptFile.objects.filter(person=u, file=f)
-        if ukf:
-            is_kept = True
-        else:
-            is_kept = False
-        f.modified_times += 1
-        f.save()
-        return Response({
-            'info': 'success',
-            'code': 200,
-            'is_kept': is_kept,
-            'data': FileSer(f).data
-        }, status=200)
-
-
 class DelBrowseFile(APIView):
     def get(self, request):
         token = request.META.get('HTTP_TOKEN')

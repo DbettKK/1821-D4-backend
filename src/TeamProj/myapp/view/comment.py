@@ -33,6 +33,24 @@ class CommentFile(APIView):
         }, status=200)
 
 
+class GetComments(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        file_id = request.GET.get('file_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        f = chk_file_id(file_id)
+        if isinstance(f, Response):
+            return f
+        c = Comment.objects.filter(file=f)
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': CommentSer(c, many=True).data
+        }, status=200)
+
 # class GetImg(APIView):
 #     def post(self, request):
 #         token = request.META.get('HTTP_TOKEN')

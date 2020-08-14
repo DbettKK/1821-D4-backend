@@ -36,6 +36,7 @@ urlpatterns = [
     path('file/cancelfavor/', views.CancelFavorite.as_view(), name='cancel_favorite'),
     path('file/favorite/get/', views.GetFavorites.as_view(), name='get_favorites'),
 
+    path('file/edit/', views.EditFile.as_view(), name='edit_file'),
     path('team/create/', views.CreateTeam.as_view(), name='create_team'),
     path('team/join/<int:team_id>/', views.JoinTeam.as_view(), name='join_team'),
     path('team/exit/', views.ExitTeam.as_view(), name='exit_team'),
@@ -43,9 +44,14 @@ urlpatterns = [
     path('team/all/get/', views.GetAllTeams.as_view(), name='get_create_team'),
 
     path('file/privi/pri/',views.SetPriviFile.as_view(), name='set_privi_pri'),
+    path('file/privi/change/', views.ChangePrivi.as_view(), name='change_file_privi'),
     path('file/rename/',views.RenameFile.as_view(), name='set_privi_pri'),
     path('file/comment/', views.CommentFile.as_view(), name='comment'),
+    path('file/comment/get/', views.GetComments.as_view(), name='get_comment'),
+
     path('picSave/', views.getPic.as_view(), name='picSave'),
     path('mdSave/', views.FileSave.as_view(), name='mdSave'),
 
+    path('pri/privi/judge/', views.JudgePriviPri.as_view(), name='judge_pri_privi'),
+    path('team/privi/judge/', views.JudgePriviTeam.as_view(), name='judge_team_privi'),
 ]
