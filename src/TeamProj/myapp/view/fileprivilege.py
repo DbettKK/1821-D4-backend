@@ -155,6 +155,12 @@ class JudgePriviTeam(APIView):
                 'code': 200,
                 'data': {'pri': 4}
             }, status=200)
+        if f.creator.id == user_id:
+            return Response({
+                'info': 'success',
+                'code': 200,
+                'data': {'pri': 4}
+            }, status=200)
         else:
             return Response({
                 'info': 'success',

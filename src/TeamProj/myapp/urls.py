@@ -42,6 +42,9 @@ urlpatterns = [
     path('team/exit/', views.ExitTeam.as_view(), name='exit_team'),
     path('team/share/', views.ShareTeam.as_view(), name='share_team'),
     path('team/all/get/', views.GetAllTeams.as_view(), name='get_create_team'),
+    path('team/dismiss/', views.DismissTeam.as_view(), name='dismiss_team'),
+
+    path('team/invite/', views.InviteToTeam.as_view(), name='invite_to_team'),
 
     path('file/privi/pri/',views.SetPriviFile.as_view(), name='set_privi_pri'),
     path('file/privi/change/', views.ChangePrivi.as_view(), name='change_file_privi'),
@@ -52,7 +55,7 @@ urlpatterns = [
     path('picSave/', views.getPic.as_view(), name='picSave'),
     path('mdSave/', views.FileSave.as_view(), name='mdSave'),
 
-    path('pri/privi/judge/', views.JudgePriviPri.as_view(), name='judge_pri_privi'),
+    path('private/privi/judge/', views.JudgePriviPri.as_view(), name='judge_pri_privi'),
     path('team/privi/judge/', views.JudgePriviTeam.as_view(), name='judge_team_privi'),
 
     path('getmsg/', views.GetMsg.as_view(), name='getmsg'),

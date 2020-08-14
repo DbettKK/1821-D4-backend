@@ -3,8 +3,6 @@ from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, Comment
 from myapp.serializers import CommentSer
 from myapp.views import chk_token
 from .userfile import chk_file_id
-from django.conf import settings
-import os
 
 
 class CommentFile(APIView):
@@ -24,10 +22,14 @@ class CommentFile(APIView):
             return f
         c = Comment.objects.create(person=u, file=f, content=comment)
         # c = Comment.objects.filter(person=u, file=f, content=comment).get(0)
-
-        #创建评论的同时，创建类型为comment的消息,发送给文件的创建人
-        file_creator = f.creator
-        msg = Message.objects.create(user=file_creator, msg_type='comment', msg_title=u.username)
+        # 创建评论的同时，创建类型为comment的消息,发送给文件的创建人
+        Message.objects.create(
+            user=f.creator,
+            msg_type='comment',
+            msg_title='BOOMING! YOUR FILE HAS BEEN COMMENTED JUST NOW!',
+            msg_content='USER ' + u.username + ' HAS JUST MAKED A COMMENT ON YOUR FILE ' + f.file_title + '!',
+            msg_from=f.file_title
+        )
         print(c)
         return Response({
             'info': 'success',

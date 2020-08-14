@@ -70,7 +70,7 @@ from .view.userfile import BrowseFile, Favorites, CancelFavorite, \
     CreateFilePri, CreateFileTeam, GetBrowseFiles, GetFavorites, GetCreateFiles, GetFile, \
     RenameFile, DelBrowseFile
 
-from .view.userteam import CreateTeam, JoinTeam, ExitTeam, ShareTeam, GetAllTeams, GetTeamFile
+from .view.userteam import CreateTeam, JoinTeam, ExitTeam, ShareTeam, GetAllTeams, GetTeamFile, DismissTeam
 from .view.comment import CommentFile, GetComments
 from .view.userfiledelete import FileIsDelete, FileRealDelete, GetTrashFiles, RemoveAll
 from .view.fileprivilege import SetPriviFile, ChangePrivi, JudgePriviPri, JudgePriviTeam
@@ -78,6 +78,8 @@ from .view.pic import getPic
 from .view.fileSave import FileSave
 from .view.fileedit import EditFile
 from .view.message import GetMsg
+from .view.team import InviteToTeam
+
 
 
 

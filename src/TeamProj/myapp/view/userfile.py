@@ -83,10 +83,15 @@ class Favorites(APIView):
             }, status=403)
 
         ukf = UserKeptFile.objects.update_or_create(person=u, file=f)[0]
-
-        #收藏的同时，创建类型为favor的消息,发送给文件的创建人
-        file_creator = f.creator
-        msg = Message.objects.create(user=file_creator, msg_type='favor', msg_title=u.username)
+        # 收藏的同时，创建类型为favor的消息,发送给文件的创建人
+        Message.objects.create(
+            user=f.creator,
+            msg_type='favor',
+            msg_title='BOOMING! YOUR FILE HAS BEEN FAVORITED BY A USER!',
+            msg_content='YOUR FILE ' + f.file_title + ' HAS BEEN FAVORITED BY A USER NAMED ' +
+                        u.username + ' JUST NOW!',
+            msg_from=f.file_title
+        )
 
         print(ukf)
         return Response({

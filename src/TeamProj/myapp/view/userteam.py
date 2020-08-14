@@ -142,5 +142,25 @@ class GetTeamFile(APIView):
         }, status=200)
 
 
-
+class DismissTeam(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        team_id = request.GET.get('team_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        t = Team.objects.get(pk=team_id)
+        if t.creator.id != user_id:
+            return Response({
+                'info': '你不能解散团队，只有创建者可以',
+                'code': 403
+            }, status=403)
+        res = TeamSer(t).data
+        Team.objects.filter(pk=team_id).delete()
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': res
+        }, status=200)
 
