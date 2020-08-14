@@ -31,7 +31,7 @@ class getPic(APIView):
         for chunk in myFile.chunks():      # 分块写入文件  
             destination.write(chunk)  
         destination.close()
-        print(os.path.join("E:\\upload", time_now+myFile.name))
+        #print(os.path.join("E:\\upload", time_now+myFile.name))
         return Response({
                 'info': '上传成功',
                 'code': 200,
