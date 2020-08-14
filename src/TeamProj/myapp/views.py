@@ -77,7 +77,7 @@ from .view.fileprivilege import SetPriviFile, ChangePrivi, JudgePriviPri, JudgeP
 from .view.pic import getPic
 from .view.fileSave import FileSave
 from .view.fileedit import EditFile
-
+from .view.message import GetMsg
 
 
 

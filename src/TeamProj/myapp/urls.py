@@ -54,4 +54,6 @@ urlpatterns = [
 
     path('pri/privi/judge/', views.JudgePriviPri.as_view(), name='judge_pri_privi'),
     path('team/privi/judge/', views.JudgePriviTeam.as_view(), name='judge_team_privi'),
+
+    path('getmsg/', views.GetMsg.as_view(), name='getmsg'),
 ]

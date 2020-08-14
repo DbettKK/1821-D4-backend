@@ -1,7 +1,7 @@
 from django.utils import timezone
 import json
 from rest_framework.views import APIView, Response
-from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team
+from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, Message
 from myapp.views import chk_token
 from myapp.serializers import FileSer, UserKeptFileSer, UserBrowseFileSer
 
@@ -83,6 +83,10 @@ class Favorites(APIView):
             }, status=403)
 
         ukf = UserKeptFile.objects.update_or_create(person=u, file=f)[0]
+
+        #收藏的同时，创建类型为favor的消息,发送给文件的创建人
+        file_creator = f.creator
+        msg = Message.objects.create(user=file_creator, msg_type='favor', msg_title=u.username)
 
         print(ukf)
         return Response({

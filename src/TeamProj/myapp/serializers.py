@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Comment, File, UserKeptFile, TeamMember, Team, UserBrowseFile
+from .models import User, Comment, File, UserKeptFile, TeamMember, Team, UserBrowseFile ,Message
 
 
 # class CreateUserSer(serializers.ModelSerializer):
@@ -80,4 +80,9 @@ class TeamMemberSer(serializers.ModelSerializer):
 class TeamSer(serializers.ModelSerializer):
     class Meta:
         model = Team
+        fields = '__all__'
+
+class MsgSer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
         fields = '__all__'

@@ -1,5 +1,5 @@
 from rest_framework.views import APIView, Response
-from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, Comment
+from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, Comment, Message
 from myapp.serializers import CommentSer
 from myapp.views import chk_token
 from .userfile import chk_file_id
@@ -25,6 +25,9 @@ class CommentFile(APIView):
         c = Comment.objects.create(person=u, file=f, content=comment)
         # c = Comment.objects.filter(person=u, file=f, content=comment).get(0)
 
+        #创建评论的同时，创建类型为comment的消息,发送给文件的创建人
+        file_creator = f.creator
+        msg = Message.objects.create(user=file_creator, msg_type='comment', msg_title=u.username)
         print(c)
         return Response({
             'info': 'success',
