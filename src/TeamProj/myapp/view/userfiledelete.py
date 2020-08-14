@@ -78,3 +78,19 @@ class GetTrashFiles(APIView):
             'code': 200,
             'data': FileSer(files, many=True).data
         }, status=200)
+
+
+class RemoveAll(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        files = File.objects.filter(creator=u, is_delete=True)
+        res = FileSer(files, many=True).data
+        File.objects.filter(creator=u, is_delete=True).delete()
+        return Response({
+            'info': 'success',
+            'code': 200
+        }, status=200)

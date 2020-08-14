@@ -21,9 +21,11 @@ urlpatterns = [
     path('file/browse/', views.BrowseFile.as_view(), name='browse_file'),
 
     path('file/browse/get/', views.GetBrowseFiles.as_view(), name='get_browse_files'),
+    path('file/browse/delete/', views.DelBrowseFile.as_view(), name='del_browse_files'),
     path('file/isdelete/', views.FileIsDelete.as_view(), name='file_is_delete'),
     path('file/realdelete/', views.FileRealDelete.as_view(), name='file_real_delete'),
     path('file/delete/get/', views.GetTrashFiles.as_view(), name='get_delete_file'),
+    path('file/delete/all/', views.RemoveAll.as_view(), name='remove_all_trash_file'),
 
     path('file/create/pri/', views.CreateFilePri.as_view(), name='create_pri_file'),
     path('file/create/team/', views.CreateFileTeam.as_view(), name='create_team_file'),
