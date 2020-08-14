@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = '(@40e4n77_g*m%!@f7jcplhu-se=6!*ts*j@ea&!m3v2un!_2p'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.qq.com'
@@ -98,12 +98,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'teamproj',
         'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'PASSWORD': '1821gogoGo',
+        'HOST': '175.24.121.113',
+        'PORT': '3306',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
