@@ -5,6 +5,7 @@ from myapp.models import User, File, UserBrowseFile, UserKeptFile,Message
 from myapp.views import chk_token
 from myapp.serializers import FileSer, UserKeptFileSer, UserBrowseFileSer, MsgSer
 
+
 class GetMsg(APIView):
     def get(self, request):
         token = request.META.get('HTTP_TOKEN')

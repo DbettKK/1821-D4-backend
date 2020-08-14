@@ -28,11 +28,6 @@ class SetPriviFile(APIView):
         f = chk_file_id(file_id)
         if isinstance(f, Response):
             return f
-        if f.type != 'private':
-            return Response({
-                'info': '文档类型有误',
-                'code': 403
-            }, status=403)
         f.permission = pri
         f.save()
         return Response({
