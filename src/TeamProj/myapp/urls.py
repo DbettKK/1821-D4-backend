@@ -27,6 +27,8 @@ urlpatterns = [
     path('file/delete/get/', views.GetTrashFiles.as_view(), name='get_delete_file'),
     path('file/delete/all/', views.RemoveAll.as_view(), name='remove_all_trash_file'),
 
+    path('file/create/model/', views.ModelFile.as_view(), name='create_model_file'),
+    path('file/create/customize/', views.CustomizeFile.as_view(), name='create_customize_file'),
     path('file/create/pri/', views.CreateFilePri.as_view(), name='create_pri_file'),
     path('file/create/team/', views.CreateFileTeam.as_view(), name='create_team_file'),
     path('file/team/get/', views.GetTeamFile.as_view(), name='get_team_file'),
@@ -47,9 +49,12 @@ urlpatterns = [
     path('team/dismiss/', views.DismissTeam.as_view(), name='dismiss_team'),
 
     path('team/invite/', views.InviteToTeam.as_view(), name='invite_to_team'),
+    path('team/check/creator/', views.CheckCreator.as_view(), name='check_team_creator'),
+    path('team/get/', views.InviteToTeam.as_view(), name='get_team'),
 
     path('file/privi/pri/',views.SetPriviFile.as_view(), name='set_privi_pri'),
-    path('file/privi/change/', views.ChangePrivi.as_view(), name='change_file_privi'),
+    path('file/privi/change/pri/', views.ChangeTeamToPri.as_view(), name='change_file_privi'),
+    path('file/privi/change/team/', views.ChangePriToTeam.as_view(), name='change_file_privi_to_team'),
     path('file/rename/',views.RenameFile.as_view(), name='set_privi_pri'),
     path('file/comment/', views.CommentFile.as_view(), name='comment'),
     path('file/comment/get/', views.GetComments.as_view(), name='get_comment'),

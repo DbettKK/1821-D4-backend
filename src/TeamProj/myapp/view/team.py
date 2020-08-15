@@ -1,5 +1,5 @@
 from myapp.models import Modify, File, User, Team, Message
-from myapp.serializers import FileSer, MsgSer
+from myapp.serializers import FileSer, MsgSer, TeamSer
 from myapp.views import chk_token
 from .userfile import chk_file_id
 from rest_framework.views import APIView, Response
@@ -43,3 +43,40 @@ class InviteToTeam(APIView):
             'code': 200,
             'data': MsgSer(msg).data
         }, status=400)
+
+
+class CheckCreator(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        team_id = request.GET.get('team_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        t = Team.objects.get(pk=team_id)
+        if t.creator.id == user_id:
+            return Response({
+                'info': 'success',
+                'code': 200,
+                'data': {
+                    'is_creator': True
+                }
+            }, status=200)
+        return Response({
+            'info': '不是创建者',
+            'code': 403,
+        }, status=403)
+
+
+class GetTeam(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        team_id = request.GET.get('team_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        t = Team.objects.get(pk=team_id)
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': TeamSer(t).data
+        }, status=200)
