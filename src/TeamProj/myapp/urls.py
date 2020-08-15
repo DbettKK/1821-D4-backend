@@ -36,6 +36,8 @@ urlpatterns = [
     path('file/cancelfavor/', views.CancelFavorite.as_view(), name='cancel_favorite'),
     path('file/favorite/get/', views.GetFavorites.as_view(), name='get_favorites'),
 
+    path('file/edit/save/', views.SaveEdit.as_view(), name='save_edit_file'),
+    path('file/edit/judge/', views.JudgeEdit.as_view(), name='judge_edit_file'),
     path('file/edit/', views.EditFile.as_view(), name='edit_file'),
     path('team/create/', views.CreateTeam.as_view(), name='create_team'),
     path('team/join/<int:team_id>/', views.JoinTeam.as_view(), name='join_team'),

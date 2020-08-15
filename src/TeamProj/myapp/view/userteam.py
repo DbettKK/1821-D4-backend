@@ -72,6 +72,11 @@ class ExitTeam(APIView):
         u = User.objects.get(pk=user_id)
         t = Team.objects.get(pk=team_id)
         tm = TeamMember.objects.filter(team=t, member=u)
+        if t.creator.id == user_id:
+            return Response({
+                'info': '您是团队创建者，不能退出团队',
+                'code': 403,
+            }, status=403)
         if len(tm) <= 0:
             return Response({
                 'info': '未加入该团队 无法退出',

@@ -76,7 +76,7 @@ from .view.userfiledelete import FileIsDelete, FileRealDelete, GetTrashFiles, Re
 from .view.fileprivilege import SetPriviFile, ChangePrivi, JudgePriviPri, JudgePriviTeam
 from .view.pic import getPic
 from .view.fileSave import FileSave
-from .view.fileedit import EditFile
+from .view.fileedit import EditFile, JudgeEdit, SaveEdit
 from .view.message import GetMsg
 from .view.team import InviteToTeam
 

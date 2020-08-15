@@ -84,7 +84,7 @@ class ChangePrivi(APIView):
     def get(self, request):
         token = request.META.get('HTTP_TOKEN')
         user_id = chk_token(token)
-        file_id = request.POST.get('file_id')
+        file_id = request.GET.get('file_id')
         if isinstance(user_id, Response):
             return user_id
         u = User.objects.get(pk=user_id)
@@ -93,7 +93,7 @@ class ChangePrivi(APIView):
             return f
         if f.type == 'private':
             f.type = 'team'
-        if f.type == 'team':
+        elif f.type == 'team':
             f.type = 'private'
         f.save()
         return Response({

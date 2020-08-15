@@ -50,6 +50,7 @@ class FileSer(serializers.ModelSerializer):
 
 
 class UserKeptFileSer(serializers.ModelSerializer):
+    file_creator_id = serializers.IntegerField(source='file.creator.id')
     file_privi = serializers.IntegerField(source='file.permission')
     file_name = serializers.CharField(source='file.file_title')
     file_creator_name = serializers.CharField(source='file.creator.username')
@@ -62,6 +63,7 @@ class UserKeptFileSer(serializers.ModelSerializer):
 
 
 class UserBrowseFileSer(serializers.ModelSerializer):
+    file_creator_id = serializers.IntegerField(source='file.creator.id')
     file_privi = serializers.IntegerField(source='file.permission')
     file_name = serializers.CharField(source='file.file_title')
     file_creator_name = serializers.CharField(source='file.creator.username')

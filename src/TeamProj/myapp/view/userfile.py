@@ -193,8 +193,6 @@ class CreateFileTeam(APIView):
         f = File.objects.create(
             file_content='',
             type='team',
-            permission='5',
-            team_permission='5',
             creator=u,
             team_belong=t
         )
