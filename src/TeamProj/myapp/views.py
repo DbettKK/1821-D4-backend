@@ -79,8 +79,8 @@ from .view.fileprivilege import SetPriviFile, ChangeTeamToPri, JudgePriviPri, \
 from .view.pic import getPic
 from .view.fileSave import FileSave
 from .view.fileedit import EditFile, JudgeEdit, SaveEdit
-from .view.message import GetMsg
-from .view.team import InviteToTeam, GetTeam, CheckCreator, BeFiredTeam
+from .view.message import GetMsg, SetAllRead, GetAllUnread, UnreadMsg, MsgRead, SetTypeRead
+from .view.team import InviteToTeam, GetTeam, CheckCreator, BeFiredTeam, GetMembers
 from .view.createfile import CustomizeFile, ModelFile, PreviewFile
 
 

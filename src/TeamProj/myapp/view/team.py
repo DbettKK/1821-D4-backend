@@ -1,5 +1,5 @@
-from myapp.models import Modify, File, User, Team, Message
-from myapp.serializers import FileSer, MsgSer, TeamSer
+from myapp.models import Modify, File, User, Team, Message, TeamMember
+from myapp.serializers import FileSer, MsgSer, TeamSer, TeamMemberSer
 from myapp.views import chk_token
 from .userfile import chk_file_id
 from rest_framework.views import APIView, Response
@@ -124,6 +124,22 @@ class GetTeam(APIView):
             'info': 'success',
             'code': 200,
             'data': TeamSer(t).data
+        }, status=200)
+
+
+class GetMembers(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        team_id = request.GET.get('team_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        t = Team.objects.get(pk=team_id)
+        tms = TeamMember.objects.filter(team=t)
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': TeamMemberSer(tms, many=True).data
         }, status=200)
 
 

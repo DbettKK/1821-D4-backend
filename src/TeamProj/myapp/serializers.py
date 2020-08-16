@@ -76,6 +76,7 @@ class UserBrowseFileSer(serializers.ModelSerializer):
 
 
 class TeamMemberSer(serializers.ModelSerializer):
+    member_name = serializers.CharField(source='member.username')
     class Meta:
         model = TeamMember
         fields = '__all__'

@@ -54,8 +54,8 @@ urlpatterns = [
     path('team/kickoff/', views.BeFiredTeam.as_view(), name='kickoff_team'),
     path('team/invite/', views.InviteToTeam.as_view(), name='invite_to_team'),
     path('team/check/creator/', views.CheckCreator.as_view(), name='check_team_creator'),
-    path('team/get/', views.InviteToTeam.as_view(), name='get_team'),
-
+    path('team/get/', views.GetTeam.as_view(), name='get_team'),
+    path('team/members/get/', views.GetMembers.as_view(), name='get_members'),
 
     path('file/privi/team/',views.SetPriviFileTeam.as_view(), name='set_privi_team'),
     path('file/privi/pri/',views.SetPriviFile.as_view(), name='set_privi_pri'),
@@ -72,4 +72,9 @@ urlpatterns = [
     path('team/privi/judge/', views.JudgePriviTeam.as_view(), name='judge_team_privi'),
 
     path('getmsg/', views.GetMsg.as_view(), name='getmsg'),
+    path('get/unread/counts/', views.GetAllUnread.as_view(), name='get_unread_msg'),
+    path('set/type/read/all/', views.SetTypeRead.as_view(), name='set_type_msg_read'),
+    path('set/read/all/', views.SetAllRead.as_view(), name='set_all_msg_read'),
+    path('set/read/', views.MsgRead.as_view(), name='set_msg_read'),
+    path('set/unread/', views.GetMsg.as_view(), name='set_msg_unread'),
 ]
