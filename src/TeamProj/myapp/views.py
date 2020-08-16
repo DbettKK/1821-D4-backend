@@ -64,7 +64,8 @@ class Index(generics.ListAPIView):
 
 
 # 放后面防止循环导入发生冲突
-from .view.user import UserRegister, UserLogin, GetBackPassword, TestEmail, TestEmail2, random_str, WriteOff
+from .view.user import UserRegister, UserLogin, GetBackPassword, TestEmail, \
+    TestEmail2, random_str, WriteOff, UserAchieve
 from .view.userinfo import UserChkOldPwd, UserInfo
 from .view.userfile import BrowseFile, Favorites, CancelFavorite, \
     CreateFilePri, CreateFileTeam, GetBrowseFiles, GetFavorites, GetCreateFiles, GetFile, \
@@ -78,7 +79,7 @@ from .view.pic import getPic
 from .view.fileSave import FileSave
 from .view.fileedit import EditFile, JudgeEdit, SaveEdit
 from .view.message import GetMsg
-from .view.team import InviteToTeam, GetTeam, CheckCreator
+from .view.team import InviteToTeam, GetTeam, CheckCreator, BeFiredTeam
 from .view.createfile import CustomizeFile, ModelFile
 
 

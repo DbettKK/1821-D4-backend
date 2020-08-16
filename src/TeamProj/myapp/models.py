@@ -255,3 +255,8 @@ class Message(models.Model):
     msg_time = models.DateTimeField(auto_now_add=True, verbose_name='消息时间')
     msg_is_read = models.BooleanField(default=False, verbose_name='消息是否已读')
 
+
+class Mod(models.Model):
+    mod_id = models.IntegerField(unique=True, verbose_name='模板唯一标识')
+    mod_content = models.TextField(verbose_name='模板内容')
+

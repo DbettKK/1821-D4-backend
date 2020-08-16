@@ -18,6 +18,8 @@ urlpatterns = [
     path('user/info/', views.UserInfo.as_view(), name='userinfo'),
     path('user/modify/', views.UserChkOldPwd.as_view()),
     path('user/writeoff/', views.WriteOff.as_view(), name='write_off'),
+    path('user/achieve/', views.UserAchieve.as_view(), name='achievement'),
+
     path('file/browse/', views.BrowseFile.as_view(), name='browse_file'),
 
     path('file/browse/get/', views.GetBrowseFiles.as_view(), name='get_browse_files'),
@@ -48,6 +50,7 @@ urlpatterns = [
     path('team/all/get/', views.GetAllTeams.as_view(), name='get_create_team'),
     path('team/dismiss/', views.DismissTeam.as_view(), name='dismiss_team'),
 
+    path('team/kickoff/', views.BeFiredTeam.as_view(), name='kickoff_team'),
     path('team/invite/', views.InviteToTeam.as_view(), name='invite_to_team'),
     path('team/check/creator/', views.CheckCreator.as_view(), name='check_team_creator'),
     path('team/get/', views.InviteToTeam.as_view(), name='get_team'),

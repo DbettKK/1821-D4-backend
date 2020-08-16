@@ -1,6 +1,7 @@
 from django.contrib.auth.hashers import make_password
 
-from myapp.models import User, UserToken, EmailRecord
+from myapp.models import User, UserToken, EmailRecord, File, Team, UserBrowseFile, \
+    UserKeptFile, TeamMember, Comment
 from myapp.serializers import UserInfoSer
 from myapp.views import md5, random_str, chk_token
 from rest_framework.views import APIView, Response
@@ -226,4 +227,38 @@ class WriteOff(APIView):
             'info': 'success',
             'code': 200,
             'data': res
+        }, status=200)
+
+
+class UserAchieve(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+
+        files = File.objects.filter(creator=u)
+        files_delete = files.filter(is_delete=True).count()
+        files_favor = UserKeptFile.objects.filter(person=u).count()
+        files_been_favor = UserKeptFile.objects.filter(file__creator=u).count()
+        comments = Comment.objects.filter(person=u).count()
+        been_comment = Comment.objects.filter(file__creator=u).count()
+        create_teams = Team.objects.filter(creator=u).count()
+        join_teams = TeamMember.objects.filter(member=u).count()
+
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': {
+                'username': u.username,
+                'create_files': files.count(),
+                'files_in_trash': files_delete,
+                'files_favor': files_favor,
+                'files_been_favor': files_been_favor,
+                'make_comments': comments,
+                'receive_comments': been_comment,
+                'create_teams': create_teams,
+                'join_teams': join_teams
+            }
         }, status=200)

@@ -1,6 +1,6 @@
 from django.utils import timezone
 from rest_framework.views import APIView, Response
-from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, Message
+from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, Message, Mod
 from .userfile import chk_file_id, chk_token
 from myapp.serializers import FileSer, UserKeptFileSer, UserBrowseFileSer
 
@@ -39,7 +39,7 @@ class ModelFile(APIView):
             return user_id
         u = User.objects.get(pk=user_id)
         # 这里通过模板获得file_content
-        file_content = ''
+        file_content = Mod.objects.get(mod_id=mod)
         f = File.objects.create(
             file_title=file_title,
             file_content=file_content,

@@ -44,7 +44,8 @@ class InviteToTeam(APIView):
             'data': MsgSer(msg).data
         }, status=400)
 
-#被踢出团队
+
+# 被踢出团队
 class BeFiredTeam(APIView):
     def post(self, request):
         token = request.META.get('HTTP_TOKEN')
@@ -87,6 +88,7 @@ class BeFiredTeam(APIView):
             'code': 200,
             'data': MsgSer(msg).data
         }, status=400)
+
 
 class CheckCreator(APIView):
     def get(self, request):
