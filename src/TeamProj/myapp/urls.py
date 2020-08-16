@@ -56,6 +56,7 @@ urlpatterns = [
     path('team/check/creator/', views.CheckCreator.as_view(), name='check_team_creator'),
     path('team/get/', views.GetTeam.as_view(), name='get_team'),
     path('team/members/get/', views.GetMembers.as_view(), name='get_members'),
+    path('team/accept/', views.AcceptInvite.as_view(), name='accept_invite'),
 
     path('file/privi/team/',views.SetPriviFileTeam.as_view(), name='set_privi_team'),
     path('file/privi/pri/',views.SetPriviFile.as_view(), name='set_privi_pri'),
@@ -72,6 +73,7 @@ urlpatterns = [
     path('team/privi/judge/', views.JudgePriviTeam.as_view(), name='judge_team_privi'),
 
     path('getmsg/', views.GetMsg.as_view(), name='getmsg'),
+
     path('get/unread/counts/', views.GetAllUnread.as_view(), name='get_unread_msg'),
     path('set/type/read/all/', views.SetTypeRead.as_view(), name='set_type_msg_read'),
     path('set/read/all/', views.SetAllRead.as_view(), name='set_all_msg_read'),

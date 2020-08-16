@@ -28,7 +28,8 @@ class CommentFile(APIView):
             msg_type='comment',
             msg_title='BOOMING! YOUR FILE HAS BEEN COMMENTED JUST NOW!',
             msg_content='USER ' + u.username + ' HAS JUST MAKED A COMMENT ON YOUR FILE ' + f.file_title + '!',
-            msg_from=f.file_title
+            msg_typr_from=f.id,
+            msg_person_from=user_id
         )
         print(c)
         return Response({
