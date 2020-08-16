@@ -89,7 +89,7 @@ class ChangeTeamToPri(APIView):
             return user_id
         u = User.objects.get(pk=user_id)
         f = chk_file_id(file_id)
-        if f.team_belong and f.type == 'team':
+        if f.type == 'team' or f.team_belong:
             f.team_belong = None
             f.type = 'private'
             f.save()

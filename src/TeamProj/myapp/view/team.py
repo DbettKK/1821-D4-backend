@@ -125,3 +125,5 @@ class GetTeam(APIView):
             'code': 200,
             'data': TeamSer(t).data
         }, status=200)
+
+

@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework.views import APIView, Response
 from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, Message, Mod
 from .userfile import chk_file_id, chk_token
-from myapp.serializers import FileSer, UserKeptFileSer, UserBrowseFileSer
+from myapp.serializers import FileSer, UserKeptFileSer, UserBrowseFileSer, ModSer
 
 
 class CustomizeFile(APIView):
@@ -50,4 +50,20 @@ class ModelFile(APIView):
             'info': 'success',
             'code': 200,
             'data': FileSer(f).data
+        }, status=200)
+
+
+class PreviewFile(APIView):
+    def post(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        mod = request.POST.get('model')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        # 这里通过模板获得file_content
+        m = Mod.objects.get(mod_id=mod)
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': ModSer(m).data
         }, status=200)

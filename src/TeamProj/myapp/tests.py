@@ -1,6 +1,6 @@
 from django.test import TestCase
 from requests import post, get
-from .models import User
+from .models import User, File, Mod
 
 
 # 注册测试
