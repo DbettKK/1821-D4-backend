@@ -1,6 +1,6 @@
 from rest_framework.views import APIView, Response
 from django.db.models import Q
-from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, TeamMember
+from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, TeamMember, Message
 from myapp.views import chk_token
 from myapp.serializers import TeamMemberSer, TeamSer, FileSer
 
@@ -163,6 +163,15 @@ class DismissTeam(APIView):
             }, status=403)
         res = TeamSer(t).data
         Team.objects.filter(pk=team_id).delete()
+        
+        for single_member in t.member.all():
+            Message.objects.create(
+                user = single_member,
+                msg_type='team',
+                msg_title='TEAM DISMISS',
+                msg_content='THE TEAM ' + t.name + '\'s ' + u.username + ' HAS DISMISS IT!',
+                msg_from=t.name
+            )
         return Response({
             'info': 'success',
             'code': 200,
