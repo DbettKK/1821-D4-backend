@@ -90,7 +90,7 @@ class MsgRead(APIView):
         user_id = chk_token(token)
         if isinstance(user_id, Response):
             return user_id
-        m = Message.objects.get(msg_id=msg_id)
+        m = Message.objects.get(id=msg_id)
         if m.msg_is_read is True:
             return Response({
                 'info': '该消息已经是已读状态了',
@@ -113,7 +113,7 @@ class UnreadMsg(APIView):
         user_id = chk_token(token)
         if isinstance(user_id, Response):
             return user_id
-        m = Message.objects.get(msg_id=msg_id)
+        m = Message.objects.get(id=msg_id)
         if m.msg_is_read is False:
             return Response({
                 'info': '该消息已经是未读状态了',

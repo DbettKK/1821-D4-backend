@@ -76,5 +76,5 @@ urlpatterns = [
     path('set/type/read/all/', views.SetTypeRead.as_view(), name='set_type_msg_read'),
     path('set/read/all/', views.SetAllRead.as_view(), name='set_all_msg_read'),
     path('set/read/', views.MsgRead.as_view(), name='set_msg_read'),
-    path('set/unread/', views.GetMsg.as_view(), name='set_msg_unread'),
+    path('set/unread/', views.UnreadMsg.as_view(), name='set_msg_unread'),
 ]

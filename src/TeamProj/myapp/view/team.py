@@ -57,11 +57,6 @@ class BeFiredTeam(APIView):
             return user_id
         u = User.objects.get(pk=user_id)
         t = Team.objects.get(pk=team_id)
-        if len(t.members.filter(pk=user_id)) <= 0 :
-            return Response({
-                'info': '已经不是团队成员',
-                'code': 403,
-            }, status=403)
         if t.creator.id != user_id:
             return Response({
                 'info': '不是团队管理者',
@@ -76,6 +71,12 @@ class BeFiredTeam(APIView):
             member = User.objects.get(pk=member_id)
         if member_id is None:
             member = User.objects.get(username=member_name)
+        if len(TeamMember.objects.filter(team=t, member=member)) <= 0:
+            return Response({
+                'info': '不是团队成员',
+                'code': 403,
+            }, status=403)
+        TeamMember.objects.filter(team=t, member=member).delete()
         msg = Message.objects.create(
             user=member,
             msg_type='team',
@@ -87,7 +88,7 @@ class BeFiredTeam(APIView):
             'info': 'success',
             'code': 200,
             'data': MsgSer(msg).data
-        }, status=400)
+        }, status=200)
 
 
 class CheckCreator(APIView):
