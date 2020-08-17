@@ -1,5 +1,5 @@
 from rest_framework.views import APIView, Response
-from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, Comment, Message
+from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, Comment, Message, Agree, Disagree
 from myapp.serializers import CommentSer
 from myapp.views import chk_token
 from .userfile import chk_file_id
@@ -79,7 +79,7 @@ class GetComments(APIView):
 #         post_pic = str(picname.split("/")[1])
 
 
-class Agree(APIView):
+class UserAgree(APIView):
     def get(self, request):
         token = request.META.get('HTTP_TOKEN')
         comment_id = request.GET.get('comment_id')
@@ -87,6 +87,61 @@ class Agree(APIView):
         if isinstance(user_id, Response):
             return user_id
         u = User.objects.get(pk=user_id)
+        c = Comment.objects.get(pk=comment_id)
+        if Agree.objects.filter(person=u, comment=c):
+            return Response({
+                'info': '你已经点过赞了',
+                'code': 403
+            }, status=403)
+        Agree.objects.create(
+            person=u,
+            comment=c
+        )
+        return Response({
+            'info': 'success',
+            'code': 200
+        }, status=200)
 
 
+class UserDisagree(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        comment_id = request.GET.get('comment_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        c = Comment.objects.get(pk=comment_id)
+        if Disagree.objects.filter(person=u, comment=c):
+            return Response({
+                'info': '你已经踩过了',
+                'code': 403
+            }, status=403)
+        Disagree.objects.create(
+            person=u,
+            comment=c
+        )
+        return Response({
+            'info': 'success',
+            'code': 200
+        }, status=200)
 
+
+class GetNum(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        comment_id = request.GET.get('comment_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        c = Comment.objects.get(pk=comment_id)
+        a_num = Agree.objects.filter(comment=c).count()
+        d_num = Disagree.objects.filter(comment=c).count()
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': {
+                'agree': a_num,
+                'disagree': d_num
+            }
+        }, status=200)

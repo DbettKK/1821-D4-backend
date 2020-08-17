@@ -122,7 +122,7 @@ class GetAllTeams(APIView):
         if isinstance(user_id, Response):
             return user_id
         u = User.objects.get(pk=user_id)
-        teams = Team.objects.filter(Q(creator=u)|Q(members__pk=user_id)).order_by('id')
+        teams = Team.objects.filter(Q(creator=u) | Q(members__pk=user_id)).distinct().order_by('id')
         return Response({
             'info': 'success',
             'code': 200,
@@ -163,15 +163,16 @@ class DismissTeam(APIView):
             }, status=403)
         res = TeamSer(t).data
         Team.objects.filter(pk=team_id).delete()
-        
-        for single_member in t.member.all():
-            Message.objects.create(
-                user = single_member,
-                msg_type='team',
-                msg_title='团队解散',
-                msg_content='团队 ' + t.name + '\'s ' + '被 ' + u.username + ' 解散',
-                msg_from=t.name
-            )
+
+        if len(t.members) > 0:
+            for single_member in t.members.all():
+                Message.objects.create(
+                    user=single_member,
+                    msg_type='team',
+                    msg_title='团队解散',
+                    msg_content='团队 ' + t.name + '\'s ' + '被 ' + u.username + ' 解散',
+                    msg_from=t.name
+                )
         return Response({
             'info': 'success',
             'code': 200,

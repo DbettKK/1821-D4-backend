@@ -57,6 +57,7 @@ urlpatterns = [
     path('team/get/', views.GetTeam.as_view(), name='get_team'),
     path('team/members/get/', views.GetMembers.as_view(), name='get_members'),
     path('team/accept/', views.AcceptInvite.as_view(), name='accept_invite'),
+    path('team/refuse/', views.RefuseInvite.as_view(), name='refuse_invite'),
 
     path('file/privi/team/',views.SetPriviFileTeam.as_view(), name='set_privi_team'),
     path('file/privi/pri/',views.SetPriviFile.as_view(), name='set_privi_pri'),
@@ -66,6 +67,9 @@ urlpatterns = [
     path('file/comment/', views.CommentFile.as_view(), name='comment'),
     path('file/comment/get/', views.GetComments.as_view(), name='get_comment'),
 
+    path('agrees/get/', views.GetNum.as_view(), name='get_agrees'),
+    path('comment/agree/', views.UserAgree.as_view(), name='agrees'),
+    path('comment/disagree/', views.UserDisagree.as_view(), name='disagrees'),
     path('picSave/', views.getPic.as_view(), name='picSave'),
     path('mdSave/', views.FileSave.as_view(), name='mdSave'),
 

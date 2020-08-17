@@ -35,7 +35,7 @@ class UserInfoSer(serializers.ModelSerializer):
 
 class CommentSer(serializers.ModelSerializer):
     username = serializers.CharField(source='person.username')
-
+    comment_agree = serializers.StringRelatedField()
     class Meta:
         model = Comment
         fields = '__all__'

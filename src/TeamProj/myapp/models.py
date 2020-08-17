@@ -31,21 +31,6 @@ class User(models.Model):
         related_name='kept'
     )
 
-    agree = models.ManyToManyField(
-        'Comment',
-        through='Agree',
-        through_fields=('person', 'comment'),
-        verbose_name='点赞',
-        related_name='agree_user'
-    )
-
-    disagree = models.ManyToManyField(
-        'Comment',
-        through='Disagree',
-        through_fields=('person', 'comment'),
-        verbose_name='踩',
-        related_name='disagree_user'
-    )
 
     def __str__(self):
         return self.username
@@ -272,6 +257,9 @@ class Message(models.Model):
     msg_time = models.DateTimeField(auto_now_add=True, verbose_name='消息时间')
     msg_is_read = models.BooleanField(default=False, verbose_name='消息是否已读')
     msg_is_invite = models.BooleanField(default=False, verbose_name='消息是否已读')
+
+    class Meta:
+        ordering = ['msg_time']
 
 
 class Mod(models.Model):
