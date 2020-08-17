@@ -1,5 +1,5 @@
-from myapp.models import Modify, File, User, Team, Message
-from myapp.serializers import FileSer, MsgSer, TeamSer
+from myapp.models import Modify, File, User, Team, Message, TeamMember
+from myapp.serializers import FileSer, MsgSer, TeamSer, TeamMemberSer
 from myapp.views import chk_token
 from .userfile import chk_file_id
 from rest_framework.views import APIView, Response
@@ -16,9 +16,9 @@ class InviteToTeam(APIView):
             return user_id
         u = User.objects.get(pk=user_id)
         t = Team.objects.get(pk=team_id)
-        if len(t.members.filter(pk=user_id)) <= 0 and t.creator.id != user_id:
+        if len(t.members.filter(pk=user_id)) <= 0 or t.creator.id != user_id:
             return Response({
-                'info': '非团队成员不能邀请进入团队',
+                'info': '非团队成员不能邀请别人进入团队',
                 'code': 403,
             }, status=403)
         if member_name is None and member_id is None:
@@ -36,7 +36,8 @@ class InviteToTeam(APIView):
             msg_type='team',
             msg_title='TEAM BOOMING',
             msg_content='THE TEAM ' + t.name + '\'s ' + u.username + ' INVITE YOU TO JOIN THEM!',
-            msg_from=t.name
+            msg_type_from=t.id,
+            msg_person_from=user_id
         )
         return Response({
             'info': 'success',
@@ -57,11 +58,6 @@ class BeFiredTeam(APIView):
             return user_id
         u = User.objects.get(pk=user_id)
         t = Team.objects.get(pk=team_id)
-        if len(t.members.filter(pk=user_id)) <= 0 :
-            return Response({
-                'info': '已经不是团队成员',
-                'code': 403,
-            }, status=403)
         if t.creator.id != user_id:
             return Response({
                 'info': '不是团队管理者',
@@ -76,18 +72,25 @@ class BeFiredTeam(APIView):
             member = User.objects.get(pk=member_id)
         if member_id is None:
             member = User.objects.get(username=member_name)
+        if len(TeamMember.objects.filter(team=t, member=member)) <= 0:
+            return Response({
+                'info': '不是团队成员',
+                'code': 403,
+            }, status=403)
+        TeamMember.objects.filter(team=t, member=member).delete()
         msg = Message.objects.create(
             user=member,
             msg_type='team',
             msg_title='TEAM LAYOFF',
             msg_content='THE TEAM ' + t.name + '\'s ' + ' YOU HAVE BE REMOVED FROM THE TEAM!',
-            msg_from=t.name
+            msg_type_from=t.id,
+            msg_person_from=user_id
         )
         return Response({
             'info': 'success',
             'code': 200,
             'data': MsgSer(msg).data
-        }, status=400)
+        }, status=200)
 
 
 class CheckCreator(APIView):
@@ -124,6 +127,22 @@ class GetTeam(APIView):
             'info': 'success',
             'code': 200,
             'data': TeamSer(t).data
+        }, status=200)
+
+
+class GetMembers(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        team_id = request.GET.get('team_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        t = Team.objects.get(pk=team_id)
+        tms = TeamMember.objects.filter(team=t)
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': TeamMemberSer(tms, many=True).data
         }, status=200)
 
 

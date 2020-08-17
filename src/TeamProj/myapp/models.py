@@ -251,7 +251,8 @@ class Message(models.Model):
     msg_type = models.CharField(max_length=32, choices=msg_types, verbose_name='消息类型')
     msg_title = models.CharField(max_length=128, verbose_name='消息头')
     msg_content = models.TextField(verbose_name='消息内容')
-    msg_from = models.CharField(max_length=128, null=True, verbose_name='消息来源')
+    msg_type_from = models.IntegerField(null=True, verbose_name='文件或团队id')
+    msg_person_from = models.IntegerField(null=True, verbose_name='谁导致的这条消息')
     msg_time = models.DateTimeField(auto_now_add=True, verbose_name='消息时间')
     msg_is_read = models.BooleanField(default=False, verbose_name='消息是否已读')
 

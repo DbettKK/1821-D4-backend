@@ -90,7 +90,8 @@ class Favorites(APIView):
             msg_title='BOOMING! YOUR FILE HAS BEEN FAVORITED BY A USER!',
             msg_content='YOUR FILE ' + f.file_title + ' HAS BEEN FAVORITED BY A USER NAMED ' +
                         u.username + ' JUST NOW!',
-            msg_from=f.file_title
+            msg_type_from=f.id,
+            msg_person_from=user_id
         )
 
         print(ukf)
@@ -121,6 +122,15 @@ class CancelFavorite(APIView):
         if len(ukf) > 0:
             # file_id = ukf.get().file_id
             ukf.get().delete()
+            Message.objects.create(
+                user=f.creator,
+                msg_type='favor',
+                msg_title='BOOMING! YOUR FILE WAS ABANDONED!',
+                msg_content='YOUR FILE ' + f.file_title + ' IS NO LONGER BEEN FAVORITED BY '+
+                            u.username + '!',
+                msg_type_from=f.id,
+                msg_person_from=user_id
+            )
             return Response({
                 'info': 'success',
                 'code': 200,
