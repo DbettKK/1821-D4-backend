@@ -16,7 +16,7 @@ class InviteToTeam(APIView):
             return user_id
         u = User.objects.get(pk=user_id)
         t = Team.objects.get(pk=team_id)
-        if len(t.members.filter(pk=user_id)) <= 0 or t.creator.id != user_id:
+        if len(t.members.filter(pk=user_id)) <= 0 and t.creator.id != user_id:
             return Response({
                 'info': '非团队成员不能邀请别人进入团队',
                 'code': 403,
@@ -35,7 +35,7 @@ class InviteToTeam(APIView):
             user=member,
             msg_type='team',
             msg_title='团队邀请',
-            msg_content= u.username + ' 邀请你加入他的团队 '+ t.name,
+            msg_content=u.username + ' 邀请你加入他的团队 ' + t.name,
             msg_type_from=t.id,
             msg_person_from=user_id,
             msg_is_invite=True
@@ -44,7 +44,7 @@ class InviteToTeam(APIView):
             'info': 'success',
             'code': 200,
             'data': MsgSer(msg).data
-        }, status=400)
+        }, status=200)
 
 
 # 被踢出团队
@@ -83,7 +83,7 @@ class BeFiredTeam(APIView):
             user=member,
             msg_type='team',
             msg_title='被踢出团队',
-            msg_content= '你从团队 ' + t.name + '中被移出',
+            msg_content='你从团队 ' + t.name + '中被移出',
             msg_type_from=t.id,
             msg_person_from=user_id
         )

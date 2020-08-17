@@ -31,6 +31,22 @@ class User(models.Model):
         related_name='kept'
     )
 
+    agree = models.ManyToManyField(
+        'Comment',
+        through='Agree',
+        through_fields=('person', 'comment'),
+        verbose_name='点赞',
+        related_name='agree_user'
+    )
+
+    disagree = models.ManyToManyField(
+        'Comment',
+        through='Disagree',
+        through_fields=('person', 'comment'),
+        verbose_name='踩',
+        related_name='disagree_user'
+    )
+
     def __str__(self):
         return self.username
 
@@ -264,8 +280,12 @@ class Mod(models.Model):
 
 
 class Agree(models.Model):
-    xxx = xxx
+    person = models.ForeignKey('User',on_delete=models.CASCADE, verbose_name='点赞人', related_name='agrees')
+    comment = models.ForeignKey('Comment', on_delete=models.CASCADE, verbose_name='点赞评论')
+    agree_time = models.DateTimeField(auto_now_add=True, verbose_name='点赞时间')
 
 
 class Disagree(models.Model):
-    xxx = xxx
+    person = models.ForeignKey('User', on_delete=models.CASCADE, verbose_name='踩人', related_name='disagrees')
+    comment = models.ForeignKey('Comment', on_delete=models.CASCADE, verbose_name='踩评论')
+    disagree_time = models.DateTimeField(auto_now_add=True, verbose_name='踩时间')

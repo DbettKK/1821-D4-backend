@@ -79,3 +79,14 @@ class GetComments(APIView):
 #         post_pic = str(picname.split("/")[1])
 
 
+class Agree(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        comment_id = request.GET.get('comment_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+
+
+
