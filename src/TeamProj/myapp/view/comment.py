@@ -1,6 +1,7 @@
 from rest_framework.views import APIView, Response
-from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, Comment, Message, Agree, Disagree
-from myapp.serializers import CommentSer
+from myapp.models import User, File, UserBrowseFile, UserKeptFile, \
+    Team, Comment, Message, Agree, Disagree
+from myapp.serializers import CommentSer, MsgSer
 from myapp.views import chk_token
 from .userfile import chk_file_id
 
@@ -28,8 +29,10 @@ class CommentFile(APIView):
             msg_type='comment',
             msg_title='评论消息',
             msg_content='用户 ' + u.username + ' 评论了您的文档 ' + f.file_title + '!',
-            msg_typr_from=f.id,
-            msg_person_from=user_id
+            msg_type_from=f.id,
+            msg_person_from=user_id,
+            msg_type_from_name=f.file_title,
+            msg_person_from_name=u.username
         )
         print(c)
         return Response({
@@ -88,18 +91,29 @@ class UserAgree(APIView):
             return user_id
         u = User.objects.get(pk=user_id)
         c = Comment.objects.get(pk=comment_id)
-        if Agree.objects.filter(person=u, comment=c):
+        if Agree.objects.filter(person=u, comment=c) or Disagree.objects.filter(person=u, comment=c):
             return Response({
-                'info': '你已经点过赞了',
+                'info': '你已经点过赞/踩过了',
                 'code': 403
             }, status=403)
         Agree.objects.create(
             person=u,
             comment=c
         )
+        mm = Message.objects.create(
+            user=File.objects.get(pk=c.file.id).creator,
+            msg_type='comment',
+            msg_title='评论被点赞',
+            msg_content='用户 ' + u.username + ' 点赞了您的评论！',
+            msg_type_from=c.id,
+            msg_person_from=user_id,
+            msg_type_from_name=c.content[:10],
+            msg_person_from_name=u.username
+        )
         return Response({
             'info': 'success',
-            'code': 200
+            'code': 200,
+            'data': MsgSer(mm).data
         }, status=200)
 
 
@@ -112,18 +126,29 @@ class UserDisagree(APIView):
             return user_id
         u = User.objects.get(pk=user_id)
         c = Comment.objects.get(pk=comment_id)
-        if Disagree.objects.filter(person=u, comment=c):
+        if Agree.objects.filter(person=u, comment=c) or Disagree.objects.filter(person=u, comment=c):
             return Response({
-                'info': '你已经踩过了',
+                'info': '你已经点过赞/踩过了',
                 'code': 403
             }, status=403)
         Disagree.objects.create(
             person=u,
             comment=c
         )
+        mm = Message.objects.create(
+            user=File.objects.get(pk=c.file.id).creator,
+            msg_type='comment',
+            msg_title='评论被踩',
+            msg_content='用户 ' + u.username + ' 不赞同您的评论',
+            msg_type_from=c.id,
+            msg_person_from=user_id,
+            msg_type_from_name=c.content[:10],
+            msg_person_from_name=u.username
+        )
         return Response({
             'info': 'success',
-            'code': 200
+            'code': 200,
+            'data': MsgSer(mm).data
         }, status=200)
 
 

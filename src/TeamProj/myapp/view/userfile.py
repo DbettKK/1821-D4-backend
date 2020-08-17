@@ -91,7 +91,9 @@ class Favorites(APIView):
             msg_content='你的文档 ' + f.file_title + ' 被 ' +
                         u.username + ' 收藏',
             msg_type_from=f.id,
-            msg_person_from=user_id
+            msg_person_from=user_id,
+            msg_type_from_name=f.file_title,
+            msg_person_from_name=u.username
         )
 
         print(ukf)
@@ -129,7 +131,9 @@ class CancelFavorite(APIView):
                 msg_content='你的文档 ' + f.file_title + ' 不再被 ' +
                             u.username + ' 收藏!',
                 msg_type_from=f.id,
-                msg_person_from=user_id
+                msg_person_from=user_id,
+                msg_type_from_name=f.file_title,
+                msg_person_from_name=u.username
             )
             return Response({
                 'info': 'success',

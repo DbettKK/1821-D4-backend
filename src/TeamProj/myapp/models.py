@@ -257,9 +257,12 @@ class Message(models.Model):
     msg_time = models.DateTimeField(auto_now_add=True, verbose_name='消息时间')
     msg_is_read = models.BooleanField(default=False, verbose_name='消息是否已读')
     msg_is_invite = models.BooleanField(default=False, verbose_name='消息是否已读')
+    msg_type_from_name = models.CharField(max_length=128, null=True, verbose_name='文件或团队name')
+    msg_person_from_name = models.CharField(max_length=128, null=True, verbose_name='谁导致的这条消息')
+    msg_is_accept = models.BooleanField(null=True, verbose_name='消息是否被接受')
 
     class Meta:
-        ordering = ['msg_time']
+        ordering = ['-msg_time']
 
 
 class Mod(models.Model):

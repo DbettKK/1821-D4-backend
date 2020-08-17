@@ -30,7 +30,11 @@ class InviteToTeam(APIView):
             member = User.objects.get(pk=member_id)
         if member_id is None:
             member = User.objects.get(username=member_name)
-
+        if TeamMember.objects.filter(team=t, member=member) or member.id == t.creator.id:
+            return Response({
+                'info': '该用户已经在该团队了',
+                'code': 403,
+            }, status=403)
         msg = Message.objects.create(
             user=member,
             msg_type='team',
@@ -38,7 +42,9 @@ class InviteToTeam(APIView):
             msg_content=u.username + ' 邀请你加入他的团队 ' + t.name,
             msg_type_from=t.id,
             msg_person_from=user_id,
-            msg_is_invite=True
+            msg_is_invite=True,
+            msg_type_from_name=t.name,
+            msg_person_from_name=u.username
         )
         return Response({
             'info': 'success',
@@ -85,7 +91,9 @@ class BeFiredTeam(APIView):
             msg_title='被踢出团队',
             msg_content='你从团队 ' + t.name + '中被移出',
             msg_type_from=t.id,
-            msg_person_from=user_id
+            msg_person_from=user_id,
+            msg_type_from_name=t.name,
+            msg_person_from_name=u.username
         )
         return Response({
             'info': 'success',

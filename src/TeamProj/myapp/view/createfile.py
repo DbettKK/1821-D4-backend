@@ -67,3 +67,56 @@ class PreviewFile(APIView):
             'code': 200,
             'data': ModSer(m).data
         }, status=200)
+
+
+class CustomizeFileTeam(APIView):
+    def post(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        file_title = request.POST.get('file_name')
+        team_id = request.POST.get('team_id')
+        permission = request.POST.get('file_privilege')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        t = Team.objects.get(pk=team_id)
+        f = File.objects.create(
+            file_title=file_title,
+            file_content='',
+            type='team',
+            team_permission=permission,
+            creator=u,
+            team_belong=t
+        )
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': FileSer(f).data
+        }, status=200)
+
+
+class ModelFileTeam(APIView):
+    def post(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        file_title = request.POST.get('file_name')
+        mod = request.POST.get('model')
+        team_id = request.POST.get('team_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        t = Team.objects.get(pk=team_id)
+        # 这里通过模板获得file_content
+        file_content = Mod.objects.get(mod_id=mod).mod_content
+        f = File.objects.create(
+            file_title=file_title,
+            file_content=file_content,
+            type='team',
+            creator=u,
+            team_belong=t
+        )
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': FileSer(f).data
+        }, status=200)

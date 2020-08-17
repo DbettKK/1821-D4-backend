@@ -1,7 +1,7 @@
 from django.contrib.auth.hashers import make_password
 
 from myapp.models import User, UserToken, EmailRecord, File, Team, UserBrowseFile, \
-    UserKeptFile, TeamMember, Comment
+    UserKeptFile, TeamMember, Comment, Agree, Disagree
 from myapp.serializers import UserInfoSer
 from myapp.views import md5, random_str, chk_token
 from rest_framework.views import APIView, Response
@@ -242,11 +242,15 @@ class UserAchieve(APIView):
         files_delete = files.filter(is_delete=True).count()
         files_favor = UserKeptFile.objects.filter(person=u).count()
         files_been_favor = UserKeptFile.objects.filter(file__creator=u).count()
-        comments = Comment.objects.filter(person=u).count()
+        comments = Comment.objects.filter(person=u)
         been_comment = Comment.objects.filter(file__creator=u).count()
         create_teams = Team.objects.filter(creator=u).count()
         join_teams = TeamMember.objects.filter(member=u).count()
-
+        total_agree = 0
+        total_disagree = 0
+        for c in comments:
+            total_agree += Agree.objects.filter(comment=c).count()
+            total_disagree += Disagree.objects.filter(comment=c).count()
         return Response({
             'info': 'success',
             'code': 200,
@@ -256,9 +260,11 @@ class UserAchieve(APIView):
                 'files_in_trash': files_delete,
                 'files_favor': files_favor,
                 'files_been_favor': files_been_favor,
-                'make_comments': comments,
+                'make_comments': comments.count(),
                 'receive_comments': been_comment,
                 'create_teams': create_teams,
-                'join_teams': join_teams
+                'join_teams': join_teams,
+                'total_agree': total_agree,
+                'total_disagree': total_disagree
             }
         }, status=200)

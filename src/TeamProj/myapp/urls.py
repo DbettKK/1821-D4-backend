@@ -29,6 +29,8 @@ urlpatterns = [
     path('file/delete/get/', views.GetTrashFiles.as_view(), name='get_delete_file'),
     path('file/delete/all/', views.RemoveAll.as_view(), name='remove_all_trash_file'),
 
+    path('file/create/model/team/', views.ModelFileTeam.as_view(), name='create_model_file_team'),
+    path('file/create/customize/team/', views.CustomizeFileTeam.as_view(), name='create_customize_file_team'),
     path('file/create/preview/', views.PreviewFile.as_view(), name='preview_model_file'),
     path('file/create/model/', views.ModelFile.as_view(), name='create_model_file'),
     path('file/create/customize/', views.CustomizeFile.as_view(), name='create_customize_file'),
@@ -83,4 +85,6 @@ urlpatterns = [
     path('set/read/all/', views.SetAllRead.as_view(), name='set_all_msg_read'),
     path('set/read/', views.MsgRead.as_view(), name='set_msg_read'),
     path('set/unread/', views.UnreadMsg.as_view(), name='set_msg_unread'),
+    path('msg/delete/', views.DeleteMessage.as_view(), name='del_msg'),
+    path('msg/delete/all/', views.DeleteType.as_view(), name='del_type_msg'),
 ]

@@ -138,17 +138,26 @@ class AcceptInvite(APIView):
         m = Message.objects.get(id=msg_id)
         u = User.objects.get(pk=user_id)
         if m.user_id == user_id and m.msg_type == 'team':
-            tid = m.msg_from
+            tid = m.msg_type_from
             t = Team.objects.get(pk=tid)
+            if TeamMember.objects.filter(team=t, member=u) or t.creator.id == user_id:
+                return Response({
+                    'info': '你已经加入过该团队了',
+                    'code': 403
+                }, status=403)
             tm = TeamMember.objects.create(team=t, member=u)
             rm = Message.objects.create(
                 user=t.creator,
                 msg_type='team',
                 msg_title='新团队成员',
-                msg_content='用户 ' + u.name + ' 加入了你的团队 ' + t.name + ' ',
+                msg_content='用户 ' + u.username + ' 加入了你的团队 ' + t.name + ' ',
                 msg_type_from=t.id,
-                msg_person_from=user_id
+                msg_person_from=user_id,
+                msg_type_from_name=t.name,
+                msg_person_from_name=u.username
             )
+            m.msg_is_accept=True
+            m.save()
             return Response({
                 'info': 'success',
                 'code': 200,
@@ -170,16 +179,20 @@ class RefuseInvite(APIView):
         m = Message.objects.get(id=msg_id)
         u = User.objects.get(pk=user_id)
         if m.user_id == user_id and m.msg_type == 'team':
-            tid = m.msg_from
+            tid = m.msg_type_from
             t = Team.objects.get(pk=tid)
             rm = Message.objects.create(
                 user=User.objects.get(pk=m.msg_person_from),
                 msg_type='team',
                 msg_title='团队邀请被拒绝',
-                msg_content='用户 ' + u.name + ' 拒绝加入您的团队 ' + t.name,
+                msg_content='用户 ' + u.username + ' 拒绝加入您的团队 ' + t.name,
                 msg_type_from=t.id,
-                msg_person_from=user_id
+                msg_person_from=user_id,
+                msg_type_from_name=t.name,
+                msg_person_from_name=u.username
             )
+            m.msg_is_accept = False
+            m.save()
             return Response({
                 'info': 'success',
                 'code': 200,
@@ -189,3 +202,36 @@ class RefuseInvite(APIView):
             'info': '无效拒绝',
             'code': 403
         }, status=403)
+
+
+class DeleteMessage(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        msg_id = request.GET.get('msg_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        m = Message.objects.get(id=msg_id)
+        res = MsgSer(m).data
+        u = User.objects.get(pk=user_id)
+        Message.objects.filter(id=msg_id).delete()
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': res
+        }, status=200)
+
+
+class DeleteType(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        msg_type = request.GET.get('msg_type')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        Message.objects.filter(user=u, msg_type=msg_type).delete()
+        return Response({
+            'info': 'success',
+            'code': 200
+        }, status=200)

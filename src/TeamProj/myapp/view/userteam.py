@@ -164,15 +164,17 @@ class DismissTeam(APIView):
         res = TeamSer(t).data
         Team.objects.filter(pk=team_id).delete()
 
-        if len(t.members) > 0:
-            for single_member in t.members.all():
-                Message.objects.create(
-                    user=single_member,
-                    msg_type='team',
-                    msg_title='团队解散',
-                    msg_content='团队 ' + t.name + '\'s ' + '被 ' + u.username + ' 解散',
-                    msg_from=t.name
-                )
+        for single_member in t.members.all():
+            Message.objects.create(
+                user=single_member,
+                msg_type='team',
+                msg_title='团队解散',
+                msg_content='团队 ' + t.name + '\'s ' + '被 ' + u.username + ' 解散',
+                msg_type_from=t.id,
+                msg_person_from=user_id,
+                msg_type_from_name=t.name,
+                msg_person_from_name=u.username
+            )
         return Response({
             'info': 'success',
             'code': 200,

@@ -35,7 +35,8 @@ class UserInfoSer(serializers.ModelSerializer):
 
 class CommentSer(serializers.ModelSerializer):
     username = serializers.CharField(source='person.username')
-    comment_agree = serializers.StringRelatedField()
+    agree_set = serializers.StringRelatedField(many=True)
+    disagree_set = serializers.StringRelatedField(many=True)
     class Meta:
         model = Comment
         fields = '__all__'
@@ -92,6 +93,7 @@ class TeamSer(serializers.ModelSerializer):
 
 
 class MsgSer(serializers.ModelSerializer):
+
     class Meta:
         model = Message
         fields = '__all__'

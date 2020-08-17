@@ -184,5 +184,5 @@ class JudgePriviTeam(APIView):
             return Response({
                 'info': 'success',
                 'code': 200,
-                'data': {'pri': f.permission}
+                'data': {'pri': f.team_permission}
             }, status=200)
