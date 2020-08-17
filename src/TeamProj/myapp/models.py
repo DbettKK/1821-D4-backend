@@ -255,9 +255,17 @@ class Message(models.Model):
     msg_person_from = models.IntegerField(null=True, verbose_name='谁导致的这条消息')
     msg_time = models.DateTimeField(auto_now_add=True, verbose_name='消息时间')
     msg_is_read = models.BooleanField(default=False, verbose_name='消息是否已读')
+    msg_is_invite = models.BooleanField(default=False, verbose_name='消息是否已读')
 
 
 class Mod(models.Model):
     mod_id = models.IntegerField(unique=True, verbose_name='模板唯一标识')
     mod_content = models.TextField(verbose_name='模板内容')
 
+
+class Agree(models.Model):
+    xxx = xxx
+
+
+class Disagree(models.Model):
+    xxx = xxx

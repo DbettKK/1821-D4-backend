@@ -37,7 +37,8 @@ class InviteToTeam(APIView):
             msg_title='TEAM BOOMING',
             msg_content='THE TEAM ' + t.name + '\'s ' + u.username + ' INVITE YOU TO JOIN THEM!',
             msg_type_from=t.id,
-            msg_person_from=user_id
+            msg_person_from=user_id,
+            msg_is_invite=True
         )
         return Response({
             'info': 'success',
