@@ -39,7 +39,7 @@ class ModelFile(APIView):
             return user_id
         u = User.objects.get(pk=user_id)
         # 这里通过模板获得file_content
-        file_content = Mod.objects.get(mod_id=mod)
+        file_content = Mod.objects.get(mod_id=mod).mod_content
         f = File.objects.create(
             file_title=file_title,
             file_content=file_content,
