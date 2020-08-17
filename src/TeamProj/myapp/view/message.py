@@ -144,8 +144,8 @@ class AcceptInvite(APIView):
             rm = Message.objects.create(
                 user=t.creator,
                 msg_type='team',
-                msg_title='A NEW TEAM MEMBER!',
-                msg_content='THE USER ' + u.name + ' HAS JOINED YOUR TEAM ' + t.name + ' JUST NOW!',
+                msg_title='新团队成员',
+                msg_content='用户 ' + u.name + ' 加入了你的团队 ' + t.name + ' ',
                 msg_type_from=t.id,
                 msg_person_from=user_id
             )
@@ -175,8 +175,8 @@ class RefuseInvite(APIView):
             rm = Message.objects.create(
                 user=User.objects.get(pk=m.msg_person_from),
                 msg_type='team',
-                msg_title='TEAM INVITE REFUSE',
-                msg_content='THE USER ' + u.name + ' REFUSE YOUR INVITATION TO THE TEAM ' + t.name,
+                msg_title='团队邀请被拒绝',
+                msg_content='用户 ' + u.name + ' 拒绝加入您的团队 ' + t.name,
                 msg_type_from=t.id,
                 msg_person_from=user_id
             )

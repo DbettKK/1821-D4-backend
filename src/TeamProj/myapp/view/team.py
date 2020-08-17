@@ -34,8 +34,8 @@ class InviteToTeam(APIView):
         msg = Message.objects.create(
             user=member,
             msg_type='team',
-            msg_title='TEAM BOOMING',
-            msg_content='THE TEAM ' + t.name + '\'s ' + u.username + ' INVITE YOU TO JOIN THEM!',
+            msg_title='团队邀请',
+            msg_content= u.username + ' 邀请你加入他的团队 '+ t.name,
             msg_type_from=t.id,
             msg_person_from=user_id
         )
@@ -81,8 +81,8 @@ class BeFiredTeam(APIView):
         msg = Message.objects.create(
             user=member,
             msg_type='team',
-            msg_title='TEAM LAYOFF',
-            msg_content='THE TEAM ' + t.name + '\'s ' + ' YOU HAVE BE REMOVED FROM THE TEAM!',
+            msg_title='被踢出团队',
+            msg_content= '你从团队 ' + t.name + '中被移出',
             msg_type_from=t.id,
             msg_person_from=user_id
         )

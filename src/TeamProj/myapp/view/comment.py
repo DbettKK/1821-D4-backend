@@ -26,8 +26,8 @@ class CommentFile(APIView):
         Message.objects.create(
             user=f.creator,
             msg_type='comment',
-            msg_title='BOOMING! YOUR FILE HAS BEEN COMMENTED JUST NOW!',
-            msg_content='USER ' + u.username + ' HAS JUST MAKED A COMMENT ON YOUR FILE ' + f.file_title + '!',
+            msg_title='评论消息',
+            msg_content='用户 ' + u.username + ' 评论了您的文档 ' + f.file_title + '!',
             msg_typr_from=f.id,
             msg_person_from=user_id
         )

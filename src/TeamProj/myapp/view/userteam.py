@@ -168,8 +168,8 @@ class DismissTeam(APIView):
             Message.objects.create(
                 user = single_member,
                 msg_type='team',
-                msg_title='TEAM DISMISS',
-                msg_content='THE TEAM ' + t.name + '\'s ' + u.username + ' HAS DISMISS IT!',
+                msg_title='团队解散',
+                msg_content='团队 ' + t.name + '\'s ' + '被 ' + u.username + ' 解散',
                 msg_from=t.name
             )
         return Response({

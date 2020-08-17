@@ -87,9 +87,9 @@ class Favorites(APIView):
         Message.objects.create(
             user=f.creator,
             msg_type='favor',
-            msg_title='BOOMING! YOUR FILE HAS BEEN FAVORITED BY A USER!',
-            msg_content='YOUR FILE ' + f.file_title + ' HAS BEEN FAVORITED BY A USER NAMED ' +
-                        u.username + ' JUST NOW!',
+            msg_title='文档收藏!',
+            msg_content='你的文档 ' + f.file_title + ' 被 ' +
+                        u.username + ' 收藏',
             msg_type_from=f.id,
             msg_person_from=user_id
         )
@@ -125,9 +125,9 @@ class CancelFavorite(APIView):
             Message.objects.create(
                 user=f.creator,
                 msg_type='favor',
-                msg_title='BOOMING! YOUR FILE WAS ABANDONED!',
-                msg_content='YOUR FILE ' + f.file_title + ' IS NO LONGER BEEN FAVORITED BY '+
-                            u.username + '!',
+                msg_title='文档取消收藏',
+                msg_content='你的文档 ' + f.file_title + ' 不再被 '+
+                            u.username + ' 收藏!',
                 msg_type_from=f.id,
                 msg_person_from=user_id
             )
