@@ -37,7 +37,8 @@ class InviteToTeam(APIView):
             msg_title='团队邀请',
             msg_content= u.username + ' 邀请你加入他的团队 '+ t.name,
             msg_type_from=t.id,
-            msg_person_from=user_id
+            msg_person_from=user_id,
+            msg_is_invite=True
         )
         return Response({
             'info': 'success',
