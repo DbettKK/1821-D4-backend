@@ -264,7 +264,7 @@ class ShareMessage(APIView):
                 user=User.objects.get(Q(username=messageTo) | Q(email=messageTo)),
                 msg_type = 'share',
                 msg_title = '分享文件',
-                msg_content = 'http://175.24.121.113/edit/'+file_id,
+                msg_content = '用户 ' +u.username+ ' 向你分享了文件 '+f.file_title,
                 msg_type_from = f.id,
                 msg_person_from = user_id,
                 msg_type_from_name = f.file_title,
