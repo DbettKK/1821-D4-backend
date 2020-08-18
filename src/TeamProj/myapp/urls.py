@@ -87,4 +87,5 @@ urlpatterns = [
     path('set/unread/', views.UnreadMsg.as_view(), name='set_msg_unread'),
     path('msg/delete/', views.DeleteMessage.as_view(), name='del_msg'),
     path('msg/delete/all/', views.DeleteType.as_view(), name='del_type_msg'),
+    path('msg/sendInnerMessage/', views.ShareMessage.as_view(), name='share_massge'),
 ]

@@ -1,10 +1,20 @@
 from django.utils import timezone
+from django.db.models import Q
 import json
 from rest_framework.views import APIView, Response
 from myapp.models import User, File, UserBrowseFile, UserKeptFile, Message, Team, TeamMember
 from myapp.views import chk_token
 from myapp.serializers import FileSer, UserKeptFileSer, UserBrowseFileSer, MsgSer, TeamMemberSer
 
+def chk_file_id(file_id):
+    try:
+        f = File.objects.get(pk=file_id)
+    except:
+        return Response({
+            'info': '文件不存在',
+            'code': 403,
+        }, status=403)
+    return f
 
 class GetMsg(APIView):
     def get(self, request):
@@ -235,3 +245,37 @@ class DeleteType(APIView):
             'info': 'success',
             'code': 200
         }, status=200)
+
+#获取站内的分享消息
+class ShareMessage(APIView):
+    def post(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        file_id = request.POST.get('file_id')
+        messageTo = request.POST.get('shareMessageTo')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        f = chk_file_id(file_id)
+        if isinstance(f, Response):
+            return f
+        if User.objects.filter(Q(username=messageTo) | Q(email=messageTo)):
+            m=Message.objects.create(
+                user=User.objects.get(Q(username=messageTo) | Q(email=messageTo)),
+                msg_type = 'share',
+                msg_title = '分享文件',
+                msg_content = 'http://175.24.121.113/edit/'+file_id,
+                msg_type_from = f.id,
+                msg_person_from = user_id,
+                msg_type_from_name = f.file_title,
+                msg_person_from_name = u.username
+            )
+        else:
+            return Response({
+            'info':'用户不存在',
+            'code':403
+            },status=403)
+        return Response({
+            'info': 'success',
+            'code': 200,
+        } , status=200)
