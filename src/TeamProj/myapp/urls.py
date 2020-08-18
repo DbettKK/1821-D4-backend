@@ -68,6 +68,7 @@ urlpatterns = [
     path('file/rename/',views.RenameFile.as_view(), name='set_privi_pri'),
     path('file/comment/', views.CommentFile.as_view(), name='comment'),
     path('file/comment/get/', views.GetComments.as_view(), name='get_comment'),
+    path('file/timeline/get/', views.GetFileTimeline.as_view(), name='get_time_line'),
 
     path('agrees/get/', views.GetNum.as_view(), name='get_agrees'),
     path('comment/agree/', views.UserAgree.as_view(), name='agrees'),

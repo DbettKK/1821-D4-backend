@@ -83,6 +83,7 @@ from .view.message import GetMsg, SetAllRead, GetAllUnread, UnreadMsg, MsgRead, 
     SetTypeRead, AcceptInvite, RefuseInvite, DeleteMessage, DeleteType, ShareMessage
 from .view.team import InviteToTeam, GetTeam, CheckCreator, BeFiredTeam, GetMembers
 from .view.createfile import CustomizeFile, ModelFile, PreviewFile, CustomizeFileTeam, ModelFileTeam
+from .view.filetimeline import GetFileTimeline
 
 
 
