@@ -1,5 +1,5 @@
 from myapp.models import Modify, File, User, Team, Message, TeamMember
-from myapp.serializers import FileSer, MsgSer, TeamSer, TeamMemberSer
+from myapp.serializers import FileSer, MsgSer, TeamSer, TeamMemberSer, UserInfoSer
 from myapp.views import chk_token
 from .userfile import chk_file_id
 from rest_framework.views import APIView, Response
@@ -11,6 +11,7 @@ class InviteToTeam(APIView):
         team_id = request.POST.get('team_id')
         member_name = request.POST.get('member_name')
         member_id = request.POST.get('member_id')
+        member_email = request.POST.get('member_email')
         user_id = chk_token(token)
         if isinstance(user_id, Response):
             return user_id
@@ -21,15 +22,13 @@ class InviteToTeam(APIView):
                 'info': '非团队成员不能邀请别人进入团队',
                 'code': 403,
             }, status=403)
-        if member_name is None and member_id is None:
-            return Response({
-                'info': '请至少传递一个参数',
-                'code': 400,
-            }, status=400)
-        if member_name is None:
-            member = User.objects.get(pk=member_id)
-        if member_id is None:
+        if member_email is not None:
+            member = User.objects.get(email=member_email)
+        if member_name is not None:
             member = User.objects.get(username=member_name)
+        if member_id is not None:
+            member = User.objects.get(pk=member_id)
+
         if TeamMember.objects.filter(team=t, member=member) or member.id == t.creator.id:
             return Response({
                 'info': '该用户已经在该团队了',
@@ -154,4 +153,48 @@ class GetMembers(APIView):
             'data': TeamMemberSer(tms, many=True).data
         }, status=200)
 
+
+class FindInvite(APIView):
+    def post(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        name = request.POST.get('username')
+        email = request.POST.get('email')
+        id = request.POST.get('user_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.filter(pk=user_id)
+        if id is not None:
+            u = User.objects.filter(pk=id)
+            if len(u) <= 0:
+                return Response({
+                    'info': '无效id',
+                    'code': 403,
+                }, status=403)
+        if email is not None:
+            u = User.objects.filter(email__istartswith=email)
+            if len(u) <= 0:
+                return Response({
+                    'info': '无效email',
+                    'code': 403,
+                }, status=403)
+        if name is not None and name != '':
+            u = User.objects.filter(username__icontains=name)
+            if len(u) <= 0:
+                return Response({
+                    'info': '无效name',
+                    'code': 403,
+                }, status=403)
+        if len(u) > 1:
+            return Response({
+                'info': 'success',
+                'code': 200,
+                'data': UserInfoSer(u, many=True).data
+            }, status=200)
+        if len(u) == 1:
+            return Response({
+                'info': 'success',
+                'code': 200,
+                'data': UserInfoSer(u, many=True).data
+            }, status=200)
 

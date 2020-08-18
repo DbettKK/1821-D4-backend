@@ -8,11 +8,20 @@ class User(models.Model):
     """
     用户类
     """
+    genders = ((1, 'male'), (2, 'female'))
     username = models.CharField(max_length=32, verbose_name='用户名', unique=True)
     password = models.CharField(max_length=128, verbose_name='password')
     phone_num = models.CharField(max_length=11, verbose_name='电话')
     email = models.EmailField(unique=True)
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='用户注册时间')
+
+    avatar = models.CharField(max_length=128, null=True, verbose_name='头像url')
+    # 选填
+    address = models.CharField(null=True, max_length=128, verbose_name='籍贯')
+    age = models.IntegerField(null=True, verbose_name='年龄')
+    qq = models.CharField(null=True, max_length=54, verbose_name='qq')
+    gender = models.IntegerField(null=True, choices=genders, verbose_name='性别')
+
     isActive = models.BooleanField(default=False)
 
     browse = models.ManyToManyField(
@@ -30,7 +39,6 @@ class User(models.Model):
         verbose_name='收藏',
         related_name='kept'
     )
-
 
     def __str__(self):
         return self.username
@@ -161,6 +169,7 @@ class Team(models.Model):
     )
     name = models.CharField(max_length=32, verbose_name='团队名称')
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    avatar = models.CharField(max_length=128, null=True, verbose_name='团队头像url')
 
     def __str__(self):
         return self.name
@@ -245,7 +254,7 @@ class Modify(models.Model):
 
 class Message(models.Model):
     msg_types = (
-        ('favor', '收藏'), ('comment', '评论'), ('team', '团队')
+        ('favor', '收藏'), ('comment', '评论'), ('team', '团队'), ('share', '团队')
     )
 
     user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='my_msg', verbose_name='用户')

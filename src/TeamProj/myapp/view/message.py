@@ -1,20 +1,10 @@
-from django.utils import timezone
 from django.db.models import Q
-import json
 from rest_framework.views import APIView, Response
 from myapp.models import User, File, UserBrowseFile, UserKeptFile, Message, Team, TeamMember
 from myapp.views import chk_token
 from myapp.serializers import FileSer, UserKeptFileSer, UserBrowseFileSer, MsgSer, TeamMemberSer
+from .userfile import chk_file_id
 
-def chk_file_id(file_id):
-    try:
-        f = File.objects.get(pk=file_id)
-    except:
-        return Response({
-            'info': '文件不存在',
-            'code': 403,
-        }, status=403)
-    return f
 
 class GetMsg(APIView):
     def get(self, request):
@@ -24,7 +14,7 @@ class GetMsg(APIView):
         if isinstance(user_id, Response):
             return user_id
         u = User.objects.get(pk=user_id)
-        if msg_types != 'favor' and msg_types != 'comment' and msg_types != 'team':
+        if msg_types != 'favor' and msg_types != 'comment' and msg_types != 'team' and msg_types != 'share':
             return Response({
                 'info': '消息类型错误',
                 'code': 401,
@@ -46,7 +36,7 @@ class SetTypeRead(APIView):
         if isinstance(user_id, Response):
             return user_id
         u = User.objects.get(pk=user_id)
-        if msg_types != 'favor' and msg_types != 'comment' and msg_types != 'team':
+        if msg_types != 'favor' and msg_types != 'comment' and msg_types != 'team' and msg_types != 'share':
             return Response({
                 'info': '消息类型错误',
                 'code': 401,
@@ -117,6 +107,7 @@ class MsgRead(APIView):
 
 class UnreadMsg(APIView):
     """设为未读"""
+
     def get(self, request):
         token = request.META.get('HTTP_TOKEN')
         msg_id = request.GET.get('msg_id')
@@ -149,7 +140,13 @@ class AcceptInvite(APIView):
         u = User.objects.get(pk=user_id)
         if m.user_id == user_id and m.msg_type == 'team':
             tid = m.msg_type_from
-            t = Team.objects.get(pk=tid)
+            t = Team.objects.filter(pk=tid)
+            if len(t) <= 0:
+                return Response({
+                    'info': '该团队已解散',
+                    'code': 403
+                }, status=403)
+            t = t.get()
             if TeamMember.objects.filter(team=t, member=u) or t.creator.id == user_id:
                 return Response({
                     'info': '你已经加入过该团队了',
@@ -166,7 +163,7 @@ class AcceptInvite(APIView):
                 msg_type_from_name=t.name,
                 msg_person_from_name=u.username
             )
-            m.msg_is_accept=True
+            m.msg_is_accept = True
             m.save()
             return Response({
                 'info': 'success',
@@ -190,7 +187,13 @@ class RefuseInvite(APIView):
         u = User.objects.get(pk=user_id)
         if m.user_id == user_id and m.msg_type == 'team':
             tid = m.msg_type_from
-            t = Team.objects.get(pk=tid)
+            t = Team.objects.filter(pk=tid)
+            if len(t) <= 0:
+                return Response({
+                    'info': '该团队已解散',
+                    'code': 403
+                }, status=403)
+            t = t.get()
             rm = Message.objects.create(
                 user=User.objects.get(pk=m.msg_person_from),
                 msg_type='team',
@@ -246,7 +249,7 @@ class DeleteType(APIView):
             'code': 200
         }, status=200)
 
-#获取站内的分享消息
+
 class ShareMessage(APIView):
     def post(self, request):
         token = request.META.get('HTTP_TOKEN')
@@ -260,22 +263,23 @@ class ShareMessage(APIView):
         if isinstance(f, Response):
             return f
         if User.objects.filter(Q(username=messageTo) | Q(email=messageTo)):
-            m=Message.objects.create(
+            m = Message.objects.create(
                 user=User.objects.get(Q(username=messageTo) | Q(email=messageTo)),
-                msg_type = 'share',
-                msg_title = '分享文件',
-                msg_content = '用户 ' +u.username+ ' 向你分享了文件 '+f.file_title,
-                msg_type_from = f.id,
-                msg_person_from = user_id,
-                msg_type_from_name = f.file_title,
-                msg_person_from_name = u.username
+                msg_type='share',
+                msg_title='分享文件',
+                msg_content='用户 ' +u.username+ ' 向你分享了文件 '+f.file_title,
+                msg_type_from=f.id,
+                msg_person_from=user_id,
+                msg_type_from_name=f.file_title,
+                msg_person_from_name=u.username
             )
         else:
             return Response({
-            'info':'用户不存在',
-            'code':403
-            },status=403)
+                'info': '用户不存在',
+                'code': 403
+            }, status=403)
         return Response({
             'info': 'success',
             'code': 200,
-        } , status=200)
+        }, status=200)
+2431811460

@@ -7,6 +7,12 @@ import hashlib
 import time
 
 
+def avatar(email):
+    digest = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
+    return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
+        digest, 128)
+
+
 def md5(user):
     """md5 加密token"""
     ctime = str(time.time())
@@ -65,7 +71,7 @@ class Index(generics.ListAPIView):
 
 # 放后面防止循环导入发生冲突
 from .view.user import UserRegister, UserLogin, GetBackPassword, TestEmail, \
-    TestEmail2, random_str, WriteOff, UserAchieve
+    TestEmail2, random_str, WriteOff, UserAchieve, FinishInfo, ChangeAvatar, ChangeTeamAvatar
 from .view.userinfo import UserChkOldPwd, UserInfo
 from .view.userfile import BrowseFile, Favorites, CancelFavorite, \
     CreateFilePri, CreateFileTeam, GetBrowseFiles, GetFavorites, GetCreateFiles, GetFile, \
@@ -81,7 +87,7 @@ from .view.fileSave import FileSave
 from .view.fileedit import EditFile, JudgeEdit, SaveEdit
 from .view.message import GetMsg, SetAllRead, GetAllUnread, UnreadMsg, MsgRead, \
     SetTypeRead, AcceptInvite, RefuseInvite, DeleteMessage, DeleteType, ShareMessage
-from .view.team import InviteToTeam, GetTeam, CheckCreator, BeFiredTeam, GetMembers
+from .view.team import InviteToTeam, GetTeam, CheckCreator, BeFiredTeam, GetMembers, FindInvite
 from .view.createfile import CustomizeFile, ModelFile, PreviewFile, CustomizeFileTeam, ModelFileTeam
 from .view.filetimeline import GetFileTimeline
 

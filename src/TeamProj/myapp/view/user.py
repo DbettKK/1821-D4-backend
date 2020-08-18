@@ -1,12 +1,12 @@
 from django.contrib.auth.hashers import make_password
-
 from myapp.models import User, UserToken, EmailRecord, File, Team, UserBrowseFile, \
     UserKeptFile, TeamMember, Comment, Agree, Disagree
-from myapp.serializers import UserInfoSer
-from myapp.views import md5, random_str, chk_token
+from myapp.serializers import UserInfoSer, TeamSer
+from myapp.views import md5, random_str, chk_token, avatar
 from rest_framework.views import APIView, Response
 from django.conf import settings
 from django.core.mail import send_mail
+from django.utils import timezone
 import datetime
 
 
@@ -77,6 +77,8 @@ class UserRegister(APIView):
                 'code': 403,
                 'registered': False,
             }, status=403)
+
+        ava = avatar(email)
         current_time = datetime.datetime.now()
         if EmailRecord.objects.filter(email=email, code=code, exprie_time__gte=current_time, send_choice='register'):
             u = User.objects.create(
@@ -84,7 +86,8 @@ class UserRegister(APIView):
                 password=make_password(pwd),
                 email=email,
                 phone_num=phone_num,
-                isActive=True
+                isActive=True,
+                avatar=ava
             )
             token = md5(username)
             user = User.objects.get(username=username)
@@ -141,6 +144,13 @@ class TestEmail2(APIView):
 
     def post(self, request):
         # 生成随机数码
+        email = request.POST.get('email')
+        if User.objects.filter(email=email):
+            return Response({
+                'info': '该邮箱已注册',
+                'code': 403,
+                'emailed': False
+            }, status=403)
         code = random_str(16)
         # 主题
         subject = '金刚石文档欢迎注册'
@@ -157,7 +167,7 @@ class TestEmail2(APIView):
         # 　发送邮件
         send_result = send_mail(subject, message, sender, receiver, html_message=html_message)
         time_delta = datetime.datetime.now() + datetime.timedelta(minutes=5)
-        email_record = EmailRecord.objects.create(email=request.POST.get('email'), code=code, exprie_time=time_delta,
+        email_record = EmailRecord.objects.create(email=email, code=code, exprie_time=time_delta,
                                                   send_choice='findpassword')
         if send_result == 1:
             return Response({
@@ -179,6 +189,13 @@ class TestEmail(APIView):
 
     def post(self, request):
         # 生成随机数码
+        email = request.POST.get('email')
+        if User.objects.filter(email=email):
+            return Response({
+                'info': '该邮箱已注册',
+                'code': 403,
+                'emailed': False
+            }, status=403)
         code = random_str(16)
         # 主题
         subject = '金刚石文档欢迎注册'
@@ -197,7 +214,7 @@ class TestEmail(APIView):
         # 　发送邮件
         send_result = send_mail(subject, message, sender, receiver, html_message=html_message)
         time_delta = datetime.datetime.now() + datetime.timedelta(minutes=5)
-        email_record = EmailRecord.objects.create(email=request.POST.get('email'), code=code, exprie_time=time_delta,
+        email_record = EmailRecord.objects.create(email=email, code=code, exprie_time=time_delta,
                                                   send_choice='register')
         if (send_result == 1):
             return Response({
@@ -267,4 +284,75 @@ class UserAchieve(APIView):
                 'total_agree': total_agree,
                 'total_disagree': total_disagree
             }
+        }, status=200)
+
+
+class FinishInfo(APIView):
+    def post(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+
+        addr = request.POST.get('address')
+        age = request.POST.get('age')
+        qq = request.POST.get('qq')
+        gender = request.POST.get('gender')
+        phone_num = request.POST.get('phone_num')
+        if addr is not None:
+            u.address = addr
+        if age is not None:
+            u.age = age
+        if qq is not None:
+            u.qq = qq
+        if gender is not None:
+            u.gender = gender
+        if phone_num is not None:
+            u.phone_num = phone_num
+        u.save()
+
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': UserInfoSer(u).data
+        }, status=200)
+
+
+class ChangeAvatar(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+
+        ava = avatar(u.email + str(timezone.now()))
+        u.avatar = ava
+        u.save()
+
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': UserInfoSer(u).data
+        }, status=200)
+
+
+class ChangeTeamAvatar(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        team_id = request.GET.get('team_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        t = Team.objects.get(pk=team_id)
+
+        ava = avatar(t.name + str(timezone.now()))
+        t.avatar = ava
+        t.save()
+
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': TeamSer(t).data
         }, status=200)

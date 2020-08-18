@@ -1,7 +1,7 @@
 from rest_framework.views import APIView, Response
 from django.db.models import Q
 from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, TeamMember, Message
-from myapp.views import chk_token
+from myapp.views import chk_token, avatar
 from myapp.serializers import TeamMemberSer, TeamSer, FileSer
 
 
@@ -19,9 +19,11 @@ class CreateTeam(APIView):
         if isinstance(user_id, Response):
             return user_id
         u = User.objects.get(pk=user_id)
+        ava = avatar(name)
         t = Team.objects.create(
             creator=u,
-            name=name
+            name=name,
+            avatar=ava
         )
         return Response({
             'info': 'success',

@@ -15,7 +15,9 @@ urlpatterns = [
     path('findpassword/', views.GetBackPassword.as_view(), name='get_back_password'),
 
     # 需要token的api   最好前面跟个子目录
+    path('user/avatar/change/', views.ChangeAvatar.as_view(), name='change_avatar'),
     path('user/info/', views.UserInfo.as_view(), name='userinfo'),
+    path('user/info/finish/', views.FinishInfo.as_view(), name='finish_info'),
     path('user/modify/', views.UserChkOldPwd.as_view()),
     path('user/writeoff/', views.WriteOff.as_view(), name='write_off'),
     path('user/achieve/', views.UserAchieve.as_view(), name='achievement'),
@@ -43,6 +45,7 @@ urlpatterns = [
     path('file/cancelfavor/', views.CancelFavorite.as_view(), name='cancel_favorite'),
     path('file/favorite/get/', views.GetFavorites.as_view(), name='get_favorites'),
 
+    path('file/timeline/get/', views.GetFileTimeline.as_view(), name='get_time_line'),
     path('file/edit/save/', views.SaveEdit.as_view(), name='save_edit_file'),
     path('file/edit/judge/', views.JudgeEdit.as_view(), name='judge_edit_file'),
     path('file/edit/', views.EditFile.as_view(), name='edit_file'),
@@ -52,7 +55,9 @@ urlpatterns = [
     path('team/share/', views.ShareTeam.as_view(), name='share_team'),
     path('team/all/get/', views.GetAllTeams.as_view(), name='get_create_team'),
     path('team/dismiss/', views.DismissTeam.as_view(), name='dismiss_team'),
+    path('team/find/invite/', views.FindInvite.as_view(), name='team_find'),
 
+    path('team/avatar/change/', views.ChangeTeamAvatar.as_view(), name='change_team_avatar'),
     path('team/kickoff/', views.BeFiredTeam.as_view(), name='kickoff_team'),
     path('team/invite/', views.InviteToTeam.as_view(), name='invite_to_team'),
     path('team/check/creator/', views.CheckCreator.as_view(), name='check_team_creator'),
@@ -68,7 +73,6 @@ urlpatterns = [
     path('file/rename/',views.RenameFile.as_view(), name='set_privi_pri'),
     path('file/comment/', views.CommentFile.as_view(), name='comment'),
     path('file/comment/get/', views.GetComments.as_view(), name='get_comment'),
-    path('file/timeline/get/', views.GetFileTimeline.as_view(), name='get_time_line'),
 
     path('agrees/get/', views.GetNum.as_view(), name='get_agrees'),
     path('comment/agree/', views.UserAgree.as_view(), name='agrees'),
@@ -89,4 +93,5 @@ urlpatterns = [
     path('msg/delete/', views.DeleteMessage.as_view(), name='del_msg'),
     path('msg/delete/all/', views.DeleteType.as_view(), name='del_type_msg'),
     path('msg/sendInnerMessage/', views.ShareMessage.as_view(), name='share_massge'),
+
 ]
