@@ -31,8 +31,13 @@ class BrowseFile(APIView):
         f = chk_file_id(file_id)
         if isinstance(f, Response):
             return f
-
-        ubf = UserBrowseFile.objects.update_or_create(person=u, file=f)[0]
+        ubf = UserBrowseFile.objects.filter(person=u, file=f)
+        if ubf:
+            ubf = ubf.get()
+            ubf.last_modified = timezone.now()
+            ubf.save()
+        else:
+            ubf = UserBrowseFile.objects.create(person=u, file=f)
 
         return Response({
             'info': 'success',

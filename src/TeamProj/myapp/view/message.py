@@ -142,8 +142,9 @@ class AcceptInvite(APIView):
             tid = m.msg_type_from
             t = Team.objects.filter(pk=tid)
             if len(t) <= 0:
+                Message.objects.filter(id=msg_id).delete()
                 return Response({
-                    'info': '该团队已解散',
+                    'info': '该团队已解散 该邀请消息会自动被删除',
                     'code': 403
                 }, status=403)
             t = t.get()
@@ -189,8 +190,9 @@ class RefuseInvite(APIView):
             tid = m.msg_type_from
             t = Team.objects.filter(pk=tid)
             if len(t) <= 0:
+                Message.objects.filter(id=msg_id).delete()
                 return Response({
-                    'info': '该团队已解散',
+                    'info': '该团队已解散 该邀请消息会自动被删除',
                     'code': 403
                 }, status=403)
             t = t.get()
@@ -282,4 +284,45 @@ class ShareMessage(APIView):
             'info': 'success',
             'code': 200,
         }, status=200)
-2431811460
+
+
+class JudgeFileExit(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        file_id = request.GET.get('file_id')
+        msg_id = request.GET.get('msg_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        f = File.objects.filter(pk=file_id)
+        if f:
+            return Response({
+                'info': 'success',
+                'code': 200,
+            }, status=200)
+        Message.objects.filter(pk=msg_id).delete()
+        return Response({
+            'info': '该文件不存在 该消息已被删除',
+            'code': 403,
+        }, status=403)
+
+
+class JudgeTeamExit(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        team_id = request.GET.get('team_id')
+        msg_id = request.GET.get('msg_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        t = Team.objects.filter(pk=team_id)
+        if t:
+            return Response({
+                'info': 'success',
+                'code': 200,
+            }, status=200)
+        Message.objects.filter(pk=msg_id).delete()
+        return Response({
+            'info': '该团队不存在 该消息已被删除',
+            'code': 403,
+        }, status=403)

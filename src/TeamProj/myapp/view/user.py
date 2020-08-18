@@ -356,3 +356,22 @@ class ChangeTeamAvatar(APIView):
             'code': 200,
             'data': TeamSer(t).data
         }, status=200)
+
+
+class OtherInfo(APIView):
+    def get(self, request):
+        id = request.GET.get('id')
+        name = request.GET.get('name')
+        email = request.GET.get('email')
+        if id is not None:
+            u = User.objects.get(pk=id)
+        if name is not None:
+            u = User.objects.get(username=name)
+        if email is not None:
+            u = User.objects.get(email=email)
+
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': UserInfoSer(u).data
+        }, status=200)
