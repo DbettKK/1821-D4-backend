@@ -75,7 +75,7 @@ from .view.user import UserRegister, UserLogin, GetBackPassword, TestEmail, \
 from .view.userinfo import UserChkOldPwd, UserInfo
 from .view.userfile import BrowseFile, Favorites, CancelFavorite, \
     CreateFilePri, CreateFileTeam, GetBrowseFiles, GetFavorites, GetCreateFiles, GetFile, \
-    RenameFile, DelBrowseFile
+    RenameFile, DelBrowseFile, GetFileEdit
 
 from .view.userteam import CreateTeam, JoinTeam, ExitTeam, ShareTeam, GetAllTeams, GetTeamFile, DismissTeam
 from .view.comment import CommentFile, GetComments, UserAgree, UserDisagree, GetNum

@@ -101,11 +101,11 @@ class UserAgree(APIView):
             comment=c
         )
         mm = Message.objects.create(
-            user=File.objects.get(pk=c.file.id).creator,
+            user=c.person,
             msg_type='comment',
             msg_title='评论被点赞',
             msg_content='用户 ' + u.username + ' 点赞了您的评论！',
-            msg_type_from=c.id,
+            msg_type_from=File.objects.get(pk=c.file.id).id,
             msg_person_from=user_id,
             msg_type_from_name=c.content[:10],
             msg_person_from_name=u.username
@@ -136,11 +136,11 @@ class UserDisagree(APIView):
             comment=c
         )
         mm = Message.objects.create(
-            user=File.objects.get(pk=c.file.id).creator,
+            user=c.id,
             msg_type='comment',
             msg_title='评论被踩',
             msg_content='用户 ' + u.username + ' 不赞同您的评论',
-            msg_type_from=c.id,
+            msg_type_from=File.objects.get(pk=c.file.id).id,
             msg_person_from=user_id,
             msg_type_from_name=c.content[:10],
             msg_person_from_name=u.username

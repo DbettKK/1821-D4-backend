@@ -139,12 +139,17 @@ class JudgePriviPri(APIView):
         if isinstance(f, Response):
             return f
         if f.creator.id == user_id:
+            f.is_edit_now = True
+            f.save()
             return Response({
                 'info': 'success',
                 'code': 200,
                 'data': {'pri': 4}
             }, status=200)
         else:
+            if f.permission >= 2:
+                f.is_edit_now = True
+                f.save()
             return Response({
                 'info': 'success',
                 'code': 200,
@@ -169,18 +174,25 @@ class JudgePriviTeam(APIView):
                 'code': 403,
             }, status=403)
         if f.team_belong.creator.id == user_id:
+            f.is_edit_now = True
+            f.save()
             return Response({
                 'info': 'success',
                 'code': 200,
                 'data': {'pri': 4}
             }, status=200)
         if f.creator.id == user_id:
+            f.is_edit_now = True
+            f.save()
             return Response({
                 'info': 'success',
                 'code': 200,
                 'data': {'pri': 4}
             }, status=200)
         else:
+            if f.team_permission >= 2:
+                f.is_edit_now = True
+                f.save()
             return Response({
                 'info': 'success',
                 'code': 200,

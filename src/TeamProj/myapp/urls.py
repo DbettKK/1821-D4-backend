@@ -14,7 +14,7 @@ urlpatterns = [
     path('email2/', views.TestEmail2.as_view(), name='email2'),
     path('findpassword/', views.GetBackPassword.as_view(), name='get_back_password'),
 
-    path('user/other/info', views.OtherInfo.as_view(), name='get_other_info'),
+    path('user/other/info/', views.OtherInfo.as_view(), name='get_other_info'),
 
     # 需要token的api   最好前面跟个子目录
     path('user/avatar/change/', views.ChangeAvatar.as_view(), name='change_avatar'),
@@ -43,6 +43,7 @@ urlpatterns = [
     path('file/team/get/', views.GetTeamFile.as_view(), name='get_team_file'),
     path('file/create/all/get/', views.GetCreateFiles.as_view(), name='get_create_file_all'),
     path('file/get/', views.GetFile.as_view(), name='get_file'),
+    path('file/getedit/', views.GetFileEdit.as_view(), name='get_file_edit'),
     path('file/favorite/', views.Favorites.as_view(), name='favorite'),
     path('file/cancelfavor/', views.CancelFavorite.as_view(), name='cancel_favorite'),
     path('file/favorite/get/', views.GetFavorites.as_view(), name='get_favorites'),

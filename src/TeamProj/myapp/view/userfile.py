@@ -1,7 +1,7 @@
 from django.utils import timezone
 import json
 from rest_framework.views import APIView, Response
-from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, Message
+from myapp.models import User, File, UserBrowseFile, UserKeptFile, Team, Message, TeamMember
 from myapp.views import chk_token
 from myapp.serializers import FileSer, UserKeptFileSer, UserBrowseFileSer
 
@@ -292,6 +292,95 @@ class GetFile(APIView):
             'is_kept': is_kept,
             'data': FileSer(f).data
         }, status=200)
+
+
+class GetFileEdit(APIView):
+    def get(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        file_id = request.GET.get('file_id')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        u = User.objects.get(pk=user_id)
+        f = chk_file_id(file_id)
+        ukf = UserKeptFile.objects.filter(person=u, file=f)
+        if ukf:
+            is_kept = True
+        else:
+            is_kept = False
+
+        if isinstance(f, Response):
+            return f
+        is_edit = f.is_edit_now
+        if f.type == 'team':
+            if f.team_belong.creator.id == user_id:
+                f.is_edit_now = True
+                f.save()
+                return Response({
+                    'info': 'success',
+                    'code': 200,
+                    'is_edit': is_edit,
+                    'is_kept': is_kept,
+                    'pri': 4,
+                    'data': FileSer(f).data
+                }, status=200)
+            elif f.creator.id == user_id:
+                f.is_edit_now = True
+                f.save()
+                return Response({
+                    'info': 'success',
+                    'code': 200,
+                    'is_edit': is_edit,
+                    'is_kept': is_kept,
+                    'pri': 4,
+                    'data': FileSer(f).data
+                }, status=200)
+            else:
+                if f.team_permission >= 2:
+                    f.is_edit_now = True
+                    f.save()
+                if TeamMember.objects.filter(member=u, team=f.team_belong):
+                    return Response({
+                        'info': 'success',
+                        'code': 200,
+                        'is_edit': is_edit,
+                        'is_kept': is_kept,
+                        'pri': f.team_permission,
+                        'data': FileSer(f).data
+                    }, status=200)
+                return Response({
+                    'info': 'success',
+                    'code': 200,
+                    'is_edit': is_edit,
+                    'is_kept': is_kept,
+                    'pri': f.permission,
+                    'data': FileSer(f).data
+                }, status=200)
+        else:
+            if f.creator.id == user_id:
+                f.is_edit_now = True
+                f.save()
+                return Response({
+                    'info': 'success',
+                    'code': 200,
+                    'is_edit': is_edit,
+                    'is_kept': is_kept,
+                    'pri': 4,
+                    'data': FileSer(f).data
+                }, status=200)
+            else:
+                if f.permission >= 2:
+                    f.is_edit_now = True
+                    f.save()
+                return Response({
+                    'info': 'success',
+                    'code': 200,
+                    'is_edit': is_edit,
+                    'is_kept': is_kept,
+                    'pri': f.permission,
+                    'data': FileSer(f).data
+                }, status=200)
+
 
 
 class DelBrowseFile(APIView):

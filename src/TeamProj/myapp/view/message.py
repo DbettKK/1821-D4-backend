@@ -164,6 +164,16 @@ class AcceptInvite(APIView):
                 msg_type_from_name=t.name,
                 msg_person_from_name=u.username
             )
+            Message.objects.create(
+                user=User.objects.get(pk=m.msg_person_from),
+                msg_type='team',
+                msg_title='邀请被接受',
+                msg_content='用户 ' + u.username + ' 接受邀请，加入了团队 ' + t.name + ' ',
+                msg_type_from=t.id,
+                msg_person_from=user_id,
+                msg_type_from_name=t.name,
+                msg_person_from_name=u.username
+            )
             m.msg_is_accept = True
             m.save()
             return Response({

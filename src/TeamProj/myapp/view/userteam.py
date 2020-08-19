@@ -86,6 +86,16 @@ class ExitTeam(APIView):
             }, status=403)
         res = TeamMemberSer(tm.get()).data
         # t_id = tm.get().team.pk
+        Message.objects.create(
+            user=t.creator,
+            msg_type='team',
+            msg_title='有成员退出',
+            msg_content='用户 ' + u.username + ' 退出了你的团队 ' + t.name + ' ',
+            msg_type_from=t.id,
+            msg_person_from=user_id,
+            msg_type_from_name=t.name,
+            msg_person_from_name=u.username
+        )
         tm.get().delete()
         return Response({
             'info': 'success',
@@ -164,19 +174,19 @@ class DismissTeam(APIView):
                 'code': 403
             }, status=403)
         res = TeamSer(t).data
-        Team.objects.filter(pk=team_id).delete()
 
         for single_member in t.members.all():
             Message.objects.create(
                 user=single_member,
                 msg_type='team',
                 msg_title='团队解散',
-                msg_content='团队 ' + t.name + '\'s ' + '被 ' + u.username + ' 解散',
+                msg_content='团队 ' + t.name + '被 ' + u.username + ' 解散',
                 msg_type_from=t.id,
                 msg_person_from=user_id,
                 msg_type_from_name=t.name,
                 msg_person_from_name=u.username
             )
+        Team.objects.filter(pk=team_id).delete()
         return Response({
             'info': 'success',
             'code': 200,
