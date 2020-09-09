@@ -198,3 +198,25 @@ class FindInvite(APIView):
                 'data': UserInfoSer(u, many=True).data
             }, status=200)
 
+
+class ChangeName(APIView):
+    def post(self, request):
+        token = request.META.get('HTTP_TOKEN')
+        team_id = request.POST.get('team_id')
+        name = request.POST.get('name')
+        user_id = chk_token(token)
+        if isinstance(user_id, Response):
+            return user_id
+        t = Team.objects.get(pk=team_id)
+        if t.creator.id != user_id:
+            return Response({
+                'info': '非创建者不能修改',
+                'code': 403
+            }, status=403)
+        t.name = name
+        t.save()
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': TeamSer(t).data
+        }, status=200)

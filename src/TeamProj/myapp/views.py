@@ -87,8 +87,8 @@ from .view.fileSave import FileSave
 from .view.fileedit import EditFile, JudgeEdit, SaveEdit
 from .view.message import GetMsg, SetAllRead, GetAllUnread, UnreadMsg, MsgRead, \
     SetTypeRead, AcceptInvite, RefuseInvite, DeleteMessage, DeleteType, ShareMessage, JudgeFileExit, JudgeTeamExit
-from .view.team import InviteToTeam, GetTeam, CheckCreator, BeFiredTeam, GetMembers, FindInvite
-from .view.createfile import CustomizeFile, ModelFile, PreviewFile, CustomizeFileTeam, ModelFileTeam
+from .view.team import InviteToTeam, GetTeam, CheckCreator, BeFiredTeam, GetMembers, FindInvite, ChangeName
+from .view.createfile import CustomizeFile, ModelFile, PreviewFile, CustomizeFileTeam, ModelFileTeam, OtherPreviewFile
 from .view.filetimeline import GetFileTimeline
 
 

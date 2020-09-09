@@ -69,6 +69,18 @@ class PreviewFile(APIView):
         }, status=200)
 
 
+class OtherPreviewFile(APIView):
+    def get(self, request):
+        file_id = request.GET.get('file_id')
+        f = File.objects.get(pk=file_id)
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': FileSer(f).data
+        }, status=200)
+
+
+
 class CustomizeFileTeam(APIView):
     def post(self, request):
         token = request.META.get('HTTP_TOKEN')
