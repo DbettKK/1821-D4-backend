@@ -22,5 +22,6 @@ from . import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('myapp/', include('myapp.urls')),
+    path('myapp/captcha/', include('captcha.urls')),
     re_path(r'media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT})
 ]

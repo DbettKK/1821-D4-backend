@@ -21,17 +21,28 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+
+# from django.core.management import utils
+# utils.get_random_secret_key()
 SECRET_KEY = ''
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.qq.com'
-EMAIL_PORT = 25
-# 发送邮件的邮箱 (需要修改成你的QQ邮箱)
-EMAIL_HOST_USER = ''
-# 在邮箱中获取的16位授权密码 (需要修改成刚刚获取的授权码)
-EMAIL_HOST_PASSWORD = ''
-# 收件人看到的发件人 (需要修改成你的QQ邮箱)
-EMAIL_FROM = '金刚石文档<>'
+# django_simple_captcha 验证码配置其他配置项查看文档
+# 默认格式
+CAPTCHA_OUTPUT_FORMAT = '%(image)s %(text_field)s %(hidden_field)s '
+CAPTCHA_NOISE_FUNCTIONS = (
+    'captcha.helpers.noise_null', # 没有样式
+    'captcha.helpers.noise_arcs', # 线
+    # 'captcha.helpers.noise_dots', # 点
+)
+# 图片中的文字为随机英文字母，如 mdsh
+# CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.random_char_challenge' 
+ # 图片中的文字为数字表达式，如2+2=
+# CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'   
+# 超时(minutes)
+CAPTCHA_LENGTH = 4
+CAPTCHA_TIMEOUT = 1 
+# 验证码宽度和高度
+# CAPTCHA_IMAGE_SIZE = (100, 25)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -55,6 +66,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'myapp',
     'rest_framework',
+    'captcha',    
 ]
 
 MIDDLEWARE = [
@@ -96,11 +108,11 @@ WSGI_APPLICATION = 'TeamProj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'NAME': 'team_proj',
+        'USER': 'root',
+        'PASSWORD': 'dbettkk',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 

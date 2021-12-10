@@ -9,6 +9,39 @@ from django.core.mail import send_mail
 from django.utils import timezone
 import datetime
 
+from captcha.models import CaptchaStore
+from captcha.helpers import captcha_image_url
+
+
+def verifyCaptcha(key, code):
+    if code and key:
+        try:
+            # 获取根据hashkey获取数据库中的response值
+            get_captcha = CaptchaStore.objects.get(hashkey=key)
+            if get_captcha.response == code.lower():     # 如果验证码匹配
+                return True
+            else:
+                return False
+        except:
+            return False
+    else:
+        return False
+
+
+class ShowCaptcha(APIView):
+    """查看验证码"""
+    def get(self, request):
+        hashkey = CaptchaStore.generate_key()
+        imgage_url = captcha_image_url(hashkey)
+        return Response({
+            'info': 'success',
+            'code': 200,
+            'data': {
+                'key': hashkey,
+                'image_url': imgage_url
+            }
+        }, status=200)
+        
 
 class UserLogin(APIView):
     '用户登录视图类'
@@ -56,50 +89,43 @@ class UserRegister(APIView):
         username = request.POST.get('username')
         pwd = request.POST.get('password')
         pwd2 = request.POST.get('password2')
+        key = request.POST.get('key')
+        code = request.POST.get('code')
         email = request.POST.get('email')
         phone_num = request.POST.get('phone_num')
-        code = request.POST.get('code')
-        if not all([username, pwd, pwd2, email, phone_num, code]):
+        if not all([username, pwd, pwd2, key, code, email, phone_num]):
             return Response({
                 'info': '参数不完整',
                 'code': 400,
                 'registered': False,
             }, status=400)
-        if User.objects.filter(email=email):
+        if verifyCaptcha(key, code) is False:
             return Response({
-                'info': 'emailExist',
-                'code': 403,
+                'info': '验证码有误',
+                'code': 400,
                 'registered': False,
-            }, status=403)
+            }, status=400)
         if User.objects.filter(username=username):
             return Response({
                 'info': 'usernameExist',
                 'code': 403,
                 'registered': False,
             }, status=403)
-
         ava = avatar(email)
         current_time = datetime.datetime.now()
-        if EmailRecord.objects.filter(email=email, code=code, exprie_time__gte=current_time, send_choice='register'):
-            u = User.objects.create(
-                username=username,
-                password=make_password(pwd),
-                email=email,
-                phone_num=phone_num,
-                isActive=True,
-                avatar=ava
-            )
-            token = md5(username)
-            user = User.objects.get(username=username)
-            UserToken.objects.create(user=user, token=token)
-            res = {'info': 'success', 'token': token, 'registered': True, 'code': 200, 'data': UserInfoSer(u).data}
-            return Response(res)
-        else:
-            return Response({
-                'info': '验证码过期',
-                'code': 403,
-                'registered': False,
-            }, status=403)
+        u = User.objects.create(
+            username=username,
+            password=make_password(pwd),
+            email=email,
+            phone_num=phone_num,
+            isActive=True,
+            avatar=ava
+        )
+        token = md5(username)
+        user = User.objects.get(username=username)
+        UserToken.objects.create(user=user, token=token)
+        res = {'info': 'success', 'token': token, 'registered': True, 'code': 200, 'data': UserInfoSer(u).data}
+        return Response(res)
 
 
 class GetBackPassword(APIView):

@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from . import views
 
 app_name = 'myapp'
@@ -10,8 +10,9 @@ urlpatterns = [
     # 不需要token的api
     path('register/', views.UserRegister.as_view(), name='register'),
     path('login/', views.UserLogin.as_view(), name='login'),
-    path('email/', views.TestEmail.as_view(), name='email'),
-    path('email2/', views.TestEmail2.as_view(), name='email2'),
+    path('show/captcha/',views.ShowCaptcha.as_view(), name='captcha'),
+    # path('email/', views.TestEmail.as_view(), name='email'),
+    # path('email2/', views.TestEmail2.as_view(), name='email2'),
     path('findpassword/', views.GetBackPassword.as_view(), name='get_back_password'),
 
     path('user/other/previewfile/', views.OtherPreviewFile.as_view(), name='other_file'),

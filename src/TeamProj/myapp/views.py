@@ -70,7 +70,7 @@ class Index(generics.ListAPIView):
 
 
 # 放后面防止循环导入发生冲突
-from .view.user import UserRegister, UserLogin, GetBackPassword, TestEmail, \
+from .view.user import UserRegister, UserLogin, GetBackPassword, TestEmail, ShowCaptcha, \
     TestEmail2, random_str, WriteOff, UserAchieve, FinishInfo, ChangeAvatar, ChangeTeamAvatar, OtherInfo
 from .view.userinfo import UserChkOldPwd, UserInfo
 from .view.userfile import BrowseFile, Favorites, CancelFavorite, \
