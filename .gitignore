@@ -1,1 +1,5 @@
 *.pyc
+src/TeamProj/.idea
+src/TeamProj/myapp/migrations
+*.__pycache__
+
