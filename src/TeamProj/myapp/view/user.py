@@ -206,9 +206,7 @@ class TestEmail(APIView):
         # 收件人列表
         receiver = [request.POST.get('email')]
         # 需要发送的带样式内容
-        html_message = '<h1>欢迎注册金刚石文档账号</h1>' \
-                       '您本次注册的验证码为：{0},验证码将在5分钟后失效<br>'.format(code) \
- \
+        html_message = '<h1>欢迎注册金刚石文档账号</h1>您本次注册的验证码为：{0},验证码将在5分钟后失效<br>'.format(code) 
             # 发送者
         sender = settings.EMAIL_FROM
         # 　发送邮件
