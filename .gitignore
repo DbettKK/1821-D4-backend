@@ -2,4 +2,6 @@
 src/TeamProj/.idea
 src/TeamProj/myapp/migrations
 *.__pycache__
-
+src/TeamProj/static
+src/TeamProj/media
+*.log
